@@ -1,0 +1,2 @@
+# Red de seguridad rápida antes de push; la suite completa (tests, build) corre en CI.
+pnpm exec turbo run typecheck arch

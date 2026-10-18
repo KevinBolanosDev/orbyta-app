@@ -1,0 +1,14 @@
+pnpm-lock.yaml
+**/node_modules
+**/dist
+**/coverage
+**/.turbo
+**/.expo
+**/android
+**/ios
+apps/ml/.venv
+apps/ml/.ruff_cache
+apps/ml/.mypy_cache
+apps/ml/.pytest_cache
+docs/plan-desarrollo.md
+docs/design-system.md

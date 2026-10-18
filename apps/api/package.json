@@ -1,0 +1,45 @@
+{
+  "name": "@repo/api",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Gravyx Ascenda API — NestJS modular monolith with Clean Architecture.",
+  "type": "module",
+  "scripts": {
+    "build": "nest build",
+    "dev": "nest start --watch --preserveWatchOutput",
+    "start": "node dist/main.js",
+    "lint": "eslint .",
+    "typecheck": "tsc --noEmit",
+    "arch": "depcruise src --config .dependency-cruiser.cjs",
+    "test": "vitest run",
+    "test:unit": "vitest run --project unit",
+    "test:e2e": "vitest run --project e2e",
+    "test:coverage": "vitest run --coverage"
+  },
+  "dependencies": {
+    "@nestjs/common": "12.1.2",
+    "@nestjs/core": "12.1.2",
+    "@nestjs/platform-express": "12.1.2",
+    "@repo/contracts": "workspace:*",
+    "@repo/finance": "workspace:*",
+    "@repo/utils": "workspace:*",
+    "reflect-metadata": "0.2.2",
+    "rxjs": "7.8.2",
+    "zod": "catalog:"
+  },
+  "devDependencies": {
+    "@nestjs/cli": "12.0.8",
+    "@nestjs/testing": "12.1.2",
+    "@repo/config": "workspace:*",
+    "@types/express": "5.0.6",
+    "@types/node": "catalog:",
+    "@types/supertest": "7.2.1",
+    "@vitest/coverage-v8": "catalog:",
+    "dependency-cruiser": "18.5.0",
+    "eslint": "catalog:",
+    "supertest": "7.3.1",
+    "typescript": "catalog:",
+    "vite": "catalog:",
+    "vitest": "catalog:"
+  }
+}

@@ -1,0 +1,93 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "description": "Actualizaciones de dependencias de Gravyx Ascenda (ADR 0006). Agrupadas, con espera y fijadas.",
+  "extends": [
+    "config:recommended",
+    ":semanticCommitTypeAll(chore)",
+    ":semanticCommitScope(deps)",
+    "helpers:pinGitHubActionDigests",
+    ":pinAllExceptPeerDependencies"
+  ],
+  "timezone": "America/Bogota",
+  "schedule": ["before 6am on monday"],
+  "minimumReleaseAge": "7 days",
+  "internalChecksFilter": "strict",
+  "prConcurrentLimit": 5,
+  "rangeStrategy": "pin",
+  "postUpdateOptions": ["pnpmDedupe"],
+  "lockFileMaintenance": {
+    "enabled": true,
+    "schedule": ["before 6am on the first day of the month"]
+  },
+  "vulnerabilityAlerts": { "enabled": true, "labels": ["security"], "minimumReleaseAge": null },
+  "packageRules": [
+    {
+      "description": "Los paquetes del SDK de Expo se mueven juntos y deben coincidir con el SDK. Se suben con `npx expo install --fix`.",
+      "groupName": "expo sdk",
+      "matchPackageNames": [
+        "expo",
+        "expo-*",
+        "@expo/*",
+        "jest-expo",
+        "react",
+        "react-dom",
+        "react-native",
+        "react-native-*",
+        "@types/react"
+      ],
+      "matchUpdateTypes": ["major", "minor"],
+      "enabled": false
+    },
+    {
+      "groupName": "expo sdk patches",
+      "matchPackageNames": ["expo", "expo-*", "@expo/*", "jest-expo", "react-native-*"],
+      "matchUpdateTypes": ["patch"]
+    },
+    { "groupName": "nestjs", "matchPackageNames": ["@nestjs/*"] },
+    {
+      "groupName": "lint",
+      "matchPackageNames": [
+        "eslint",
+        "@eslint/*",
+        "eslint-*",
+        "@eslint-react/*",
+        "typescript-eslint",
+        "globals",
+        "prettier",
+        "steiger",
+        "@feature-sliced/*",
+        "dependency-cruiser"
+      ]
+    },
+    {
+      "groupName": "test",
+      "matchPackageNames": [
+        "vitest",
+        "@vitest/*",
+        "vite",
+        "jest",
+        "@types/jest",
+        "@testing-library/*",
+        "test-renderer",
+        "supertest",
+        "@types/supertest",
+        "fast-check"
+      ]
+    },
+    { "groupName": "turbo", "matchPackageNames": ["turbo"] },
+    { "groupName": "git hooks", "matchPackageNames": ["husky", "lint-staged", "@commitlint/*"] },
+    { "groupName": "github actions", "matchManagers": ["github-actions"] },
+    { "groupName": "python (apps/ml)", "matchManagers": ["pep621"] },
+    {
+      "description": "Las versiones mayores de TypeScript esperan a que typescript-eslint las soporte (ADR 0001).",
+      "matchPackageNames": ["typescript"],
+      "matchUpdateTypes": ["major"],
+      "enabled": false
+    },
+    {
+      "description": "Node está fijado en .node-version y engines; se sube a propósito.",
+      "matchDepTypes": ["engines"],
+      "enabled": false
+    }
+  ]
+}

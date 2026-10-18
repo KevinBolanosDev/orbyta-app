@@ -1,0 +1,130 @@
+packages:
+  - apps/*
+  - packages/*
+
+# Nombres cortos dentro de node_modules/.pnpm. El ninja de CMake 3.22 de Android no abre rutas de
+# más de 260 caracteres en Windows, y los builds nativos de React Native viven en node_modules.
+virtualStoreDirMaxLength: 30
+
+# --- Cadena de suministro (docs/adr/0006-cadena-de-suministro.md) ---
+# Nunca resolver una versión publicada hace menos de 7 días.
+minimumReleaseAge: 10080
+# Falla la instalación si una dependencia quiere correr un script que no está en allowBuilds.
+strictDepBuilds: true
+# Las dependencias indirectas no pueden venir de repos git ni de URLs de tarballs.
+blockExoticSubdeps: true
+# Rechaza una versión cuyo nivel de confianza bajó (ej. perdió la firma de procedencia).
+trustPolicy: no-downgrade
+# Las versiones viejas, de antes de que existieran las firmas, fallarían el chequeo anterior.
+# Un robo de paquete publica una versión NUEVA, así que solo se revisan versiones de menos de 90 días.
+trustPolicyIgnoreAfter: 129600
+# Escribe versiones exactas, nunca rangos.
+savePrefix: ''
+engineStrict: true
+
+# Paquetes que pueden correr scripts de instalación. Cualquier otro hace fallar la instalación.
+allowBuilds:
+  # Solo es un respaldo de napi-postinstall; el binario nativo llega por optionalDependencies.
+  unrs-resolver: false
+  # El binario precompilado llega como @parcel/watcher-<plataforma>; el script solo compila como respaldo.
+  '@parcel/watcher': false
+
+# tsconfck (lo usa Steiger) declara typescript ^5 pero solo lee archivos tsconfig; TS 6 funciona.
+peerDependencyRules:
+  allowedVersions:
+    tsconfck>typescript: '6'
+
+# Fuerza versiones con parche de dependencias indirectas vulnerables (encontradas por `pnpm audit`).
+overrides:
+  # GHSA-8r5x-fm3f-whwj, GHSA-p8wg-vrv2-v86f, GHSA-xw65-4hp5-5hc7 — vía eslint-plugin-boundaries (solo lint).
+  'handlebars@<4.7.10': 4.7.10
+
+# El CI falla con avisos altos o críticos. Los ignorados NO tienen parche y solo tocan herramientas de
+# desarrollo; revisar esta lista al iniciar cada fase (plan §16) y quitarlos cuando exista parche.
+audit:
+  level: high
+  ignore:
+    # braces ≤3.0.3 ReDoS vía micromatch — lo usan Metro, ESLint y Jest para buscar archivos al desarrollar.
+    - GHSA-vfj7-8cjw-p6xm
+    # node-forge ≤1.4.0 verificación de firmas — lo usa @expo/cli para firmar EAS Update, no la app.
+    - GHSA-86w9-cpqp-85rv
+
+# Versiones compartidas. Los workspaces las usan con "catalog:"; un cambio aquí actualiza todos.
+catalog:
+  '@date-fns/tz': 1.5.0
+  '@types/node': 24.19.2
+  '@vitest/coverage-v8': 4.1.11
+  date-fns: 4.4.0
+  decimal.js: 10.6.0
+  eslint: 10.12.0
+  fast-check: 4.10.2
+  typescript: 6.0.3
+  uuid: 14.0.3
+  vite: 8.3.4
+  vitest: 4.1.11
+  zod: 4.6.5
+
+# Excepción TEMPORAL (ADR 0006). Expo SDK 58 se alineó con React Native 0.88.0 final el 2026-10-15,
+# así que estas versiones exactas tenían menos de 7 días al montar F0. Solo ellas se saltan la espera;
+# cualquier otra versión nueva sigue esperando 7 días. Todas cumplen 7 días el 2026-10-23.
+# TODO(F0): borrar todo este bloque el 2026-10-23 o después y correr `pnpm install`.
+minimumReleaseAgeExclude:
+  - '2g@1.0.1'
+  - '@expo/cli@58.1.11'
+  - '@expo/config-plugins@58.0.9'
+  - '@expo/config-types@58.0.3'
+  - '@expo/config@58.0.6'
+  - '@expo/env@2.5.2'
+  - '@expo/fingerprint@0.21.5'
+  - '@expo/image-utils@0.12.5'
+  - '@expo/inline-modules@0.2.6'
+  - '@expo/local-build-cache-provider@58.0.6'
+  - '@expo/metro-config@58.0.14'
+  - '@expo/metro-file-map@58.0.5'
+  - '@expo/metro@58.0.0'
+  - '@expo/modules-macros-win32-arm64@0.20.0'
+  - '@expo/modules-macros-win32-x64@0.20.0'
+  - '@expo/package-manager@1.14.2'
+  - '@expo/prebuild-config@58.0.14'
+  - '@expo/require-utils@58.0.4'
+  - '@expo/router-server@58.0.14'
+  - '@expo/schema-utils@58.0.2'
+  - '@expo/xcpretty@4.4.7'
+  - '@react-native/asset-utils@0.88.0'
+  - '@react-native/babel-plugin-codegen@0.88.0'
+  - '@react-native/babel-preset@0.88.0'
+  - '@react-native/codegen@0.88.0'
+  - '@react-native/community-cli-plugin@0.88.0'
+  - '@react-native/debugger-frontend@0.88.0'
+  - '@react-native/debugger-shell@0.88.0'
+  - '@react-native/dev-middleware@0.88.0'
+  - '@react-native/gradle-plugin@0.88.0'
+  - '@react-native/jest-preset@0.88.0'
+  - '@react-native/js-polyfills@0.88.0'
+  - '@react-native/metro-babel-transformer@0.88.0'
+  - '@react-native/metro-config@0.88.0'
+  - '@react-native/normalize-colors@0.88.0'
+  - '@react-native/virtualized-lists@0.88.0'
+  - 'babel-preset-expo@58.0.17'
+  - 'expo-asset@58.0.16'
+  - 'expo-constants@58.0.12'
+  - 'expo-dev-client@58.0.14'
+  - 'expo-dev-launcher@58.0.14'
+  - 'expo-file-system@58.0.9'
+  - 'expo-font@58.0.8'
+  - 'expo-glass-effect@58.0.4'
+  - 'expo-linking@58.0.13'
+  - 'expo-modules-autolinking@58.0.13'
+  - 'expo-modules-core@58.0.22'
+  - 'expo-modules-jsi@58.0.15'
+  - 'expo-modules-macros@0.20.0'
+  - 'expo-router@58.0.23'
+  - 'expo-server@58.0.5'
+  - 'expo-splash-screen@58.0.10'
+  - 'expo-system-ui@58.0.6'
+  - 'expo@58.0.14'
+  - 'jest-expo@58.0.11'
+  - 'react-native-drawer-layout@4.2.12'
+  - 'react-native-gesture-handler@3.4.0'
+  - 'react-native-screens@4.30.0'
+  - 'react-native@0.88.0'

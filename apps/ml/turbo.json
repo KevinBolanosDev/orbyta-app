@@ -1,0 +1,13 @@
+{
+  "$schema": "https://turborepo.com/schema.json",
+  "extends": ["//"],
+  "tasks": {
+    "lint": { "inputs": ["src/**", "tests/**", "pyproject.toml", "uv.lock"] },
+    "typecheck": { "inputs": ["src/**", "tests/**", "pyproject.toml", "uv.lock"] },
+    "test": { "inputs": ["src/**", "tests/**", "pyproject.toml", "uv.lock"] },
+    "test:coverage": {
+      "inputs": ["src/**", "tests/**", "pyproject.toml", "uv.lock"],
+      "outputs": []
+    }
+  }
+}

@@ -1,0 +1,56 @@
+[project]
+name = "gravyx-ml"
+version = "0.0.0"
+description = "Gravyx Ascenda ML service (internal). Only the API calls it (plan §3)."
+readme = "README.md"
+requires-python = ">=3.14,<3.15"
+dependencies = [
+  "fastapi>=0.120",
+  "uvicorn>=0.38",
+]
+
+[dependency-groups]
+dev = [
+  "httpx2>=0.1",
+  "mypy>=1.18",
+  "pytest>=8.4",
+  "pytest-cov>=7.0",
+  "ruff>=0.14",
+]
+
+[build-system]
+requires = ["uv_build>=0.10,<0.11"]
+build-backend = "uv_build"
+
+[tool.uv]
+# Cadena de suministro (ADR 0006): nunca resolver una versión de menos de 7 días.
+exclude-newer = "7 days"
+
+[tool.ruff]
+line-length = 100
+target-version = "py314"
+
+[tool.ruff.lint]
+select = ["E", "W", "F", "I", "B", "UP", "N", "S", "SIM", "RUF", "PL", "ANN", "TID"]
+ignore = ["S101"]  # los assert están bien en las pruebas
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**" = ["PLR2004", "ANN", "TID251"]
+"src/gravyx_ml/api/**" = ["TID251"]
+
+[tool.ruff.lint.flake8-tidy-imports.banned-api]
+"fastapi".msg = "Only the api/ layer may import FastAPI."
+
+[tool.mypy]
+strict = true
+plugins = ["pydantic.mypy"]
+files = ["src", "tests"]
+mypy_path = "src"
+
+[tool.pydantic-mypy]
+init_forbid_extra = true
+init_typed = true
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q --cov=gravyx_ml --cov-report=term-missing --cov-fail-under=90"

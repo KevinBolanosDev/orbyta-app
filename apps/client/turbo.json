@@ -1,0 +1,15 @@
+{
+  "$schema": "https://turborepo.com/schema.json",
+  "extends": ["//"],
+  "tasks": {
+    "build": {
+      "inputs": ["$TURBO_EXTENDS$", "!android/**", "!ios/**", "!dist/**"],
+      "outputs": ["dist/**"]
+    },
+    "lint": { "inputs": ["$TURBO_DEFAULT$", "!android/**", "!ios/**", "!dist/**"] },
+    "typecheck": { "inputs": ["$TURBO_DEFAULT$", "!android/**", "!ios/**", "!dist/**"] },
+    "arch": { "inputs": ["$TURBO_DEFAULT$", "!android/**", "!ios/**", "!dist/**"] },
+    "test": { "inputs": ["$TURBO_DEFAULT$", "!android/**", "!ios/**", "!dist/**"] },
+    "test:coverage": { "inputs": ["$TURBO_DEFAULT$", "!android/**", "!ios/**", "!dist/**"] }
+  }
+}

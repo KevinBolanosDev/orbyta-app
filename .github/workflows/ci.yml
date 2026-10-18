@@ -1,0 +1,97 @@
+# CI (ADR 0010). Los PR corren solo lo que cambió (turbo --affected); main corre todo.
+# Las actions están fijadas por SHA de commit (cadena de suministro, ADR 0006); Renovate las actualiza.
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  TURBO_TELEMETRY_DISABLED: 1
+  DO_NOT_TRACK: 1
+  EXPO_NO_TELEMETRY: 1
+  CI: true
+
+jobs:
+  quality:
+    name: Lint · types · architecture · tests · build
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0 # turbo --affected compara contra la rama base
+          persist-credentials: false
+
+      - uses: pnpm/action-setup@ea17c68df8912ef543352723c149a84f56e3d413 # v6.1.0 (versión desde packageManager)
+
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: .node-version
+          cache: pnpm
+
+      - uses: astral-sh/setup-uv@1c37ad07a6a961277cf70c0d37d6f313000f5884 # v10.3.0
+        with:
+          version: '0.10.6'
+          enable-cache: true
+          cache-dependency-glob: apps/ml/uv.lock
+
+      - name: Install (frozen lockfile + supply-chain policies)
+        run: pnpm install --frozen-lockfile
+
+      - name: Verify registry signatures
+        run: pnpm audit signatures
+
+      - name: Formatting
+        run: pnpm format:check
+
+      - name: Lint, typecheck, architecture, tests with coverage, build (affected only)
+        if: github.event_name == 'pull_request'
+        run: pnpm turbo run lint typecheck arch test:coverage build --affected
+
+      - name: Lint, typecheck, architecture, tests with coverage, build (everything)
+        if: github.event_name != 'pull_request'
+        run: pnpm turbo run lint typecheck arch test:coverage build
+
+      - name: Architecture rules still block forbidden imports
+        run: pnpm arch:selftest
+
+  audit:
+    name: Dependency audit
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: pnpm/action-setup@ea17c68df8912ef543352723c149a84f56e3d413 # v6.1.0
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: .node-version
+      - name: pnpm audit (fails on high/critical, see audit.ignore in pnpm-workspace.yaml)
+        run: pnpm audit
+
+  dependency-review:
+    name: Dependency review
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/dependency-review-action@a1d282b36b6f3519aa1f3fc636f609c47dddb294 # v5.0.0
+        with:
+          fail-on-severity: high
+          comment-summary-in-pr: on-failure

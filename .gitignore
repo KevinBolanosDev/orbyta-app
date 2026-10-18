@@ -1,0 +1,58 @@
+# Dependencias
+node_modules/
+
+# Salida de build
+dist/
+build/
+web-build/
+*.tsbuildinfo
+
+# Salida de pruebas
+coverage/
+
+# Turborepo
+.turbo/
+
+# Expo / React Native
+.expo/
+expo-env.d.ts
+.metro-health-check*
+/apps/client/android/
+/apps/client/ios/
+.kotlin/
+*.jks
+*.p8
+*.p12
+*.key
+*.mobileprovision
+*.pem
+*.orig.*
+
+# Python (apps/ml)
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# Entorno (nunca versionar secretos — plan §16)
+.env
+.env.*
+!.env.example
+
+# Logs y archivos del sistema
+*.log
+npm-debug.*
+.DS_Store
+Thumbs.db
+
+# Editores
+.idea/
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+
+/docs
