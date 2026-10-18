@@ -9,10 +9,14 @@ module.exports = {
   moduleNameMapper: {
     '^@/(.*)$': '<rootDir>/src/$1',
   },
+  // Copia única de módulos nativos + resolvers de Reanimated y React Native (ADR 0019).
+  resolver: '<rootDir>/jest.resolver.js',
+  // Mocks de Unistyles y AsyncStorage (no existen módulos nativos en Jest).
+  setupFiles: ['<rootDir>/jest.setup.ts'],
   // En frío, la transformación de Babel en Windows/CI puede pasar los 5 s por defecto de Jest.
   testTimeout: 30_000,
   testMatch: ['<rootDir>/src/**/*.test.{ts,tsx}', '<rootDir>/__tests__/**/*.test.{ts,tsx}'],
-  collectCoverageFrom: ['src/**/*.{ts,tsx}', '!src/app/**', '!src/**/index.ts'],
+  collectCoverageFrom: ['src/**/*.{ts,tsx}', '!src/app/**', '!src/**/index.ts', '!src/**/*.d.ts'],
   coverageThreshold: {
     global: { lines: 80, branches: 80, functions: 80, statements: 80 },
   },

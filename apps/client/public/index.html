@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="%LANG_ISO_CODE%">
+  <head>
+    <meta charset="utf-8" />
+    <meta httpEquiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta name="color-scheme" content="dark light" />
+    <title>%WEB_TITLE%</title>
+    <!--
+      Sin parpadeo de tema (ADR 0012). Antes de que cargue el JS:
+      1. El script lee la preferencia guardada (misma clave que src/shared/ui/theme-preference.ts) y,
+         si es claro u oscuro, pone esa clase en <html>, igual que hace Unistyles después.
+      2. El CSS pinta el fondo de cada tema (color.bg). Con "sistema" decide prefers-color-scheme.
+      Los colores deben ser los tokens; lo revisa src/shared/ui/index-html.test.ts.
+    -->
+    <script>
+      (function () {
+        try {
+          var preference = window.localStorage.getItem('gravyx.theme');
+          if (preference === 'light' || preference === 'dark') {
+            document.documentElement.classList.add(preference);
+            document.documentElement.style.colorScheme = preference;
+          }
+        } catch (error) {
+          // Sin acceso a localStorage (modo privado estricto): se sigue al sistema.
+        }
+      })();
+    </script>
+    <style id="gravyx-theme-boot">
+      html {
+        background-color: #060a16;
+      }
+      @media (prefers-color-scheme: light) {
+        html {
+          background-color: #eef3fb;
+        }
+      }
+      html.dark {
+        background-color: #060a16;
+      }
+      html.light {
+        background-color: #eef3fb;
+      }
+    </style>
+    <!-- Reset recomendado por react-native-web: https://necolas.github.io/react-native-web/docs/setup/#root-element -->
+    <style id="expo-reset">
+      html,
+      body {
+        height: 100%;
+      }
+      body {
+        overflow: hidden;
+      }
+      #root {
+        display: flex;
+        height: 100%;
+        flex: 1;
+      }
+    </style>
+  </head>
+
+  <body>
+    <noscript>Gravyx Ascenda needs JavaScript to run.</noscript>
+    <div id="root"></div>
+  </body>
+</html>

@@ -23,6 +23,14 @@ export default {
     eslintWith('packages/finance/eslint.config.js'),
     'prettier --write',
   ],
+  'packages/i18n/**/*.{js,mjs,ts}': [
+    eslintWith('packages/i18n/eslint.config.js'),
+    'prettier --write',
+  ],
+  'packages/ui/**/*.{js,mjs,cjs,ts,tsx}': [
+    eslintWith('packages/ui/eslint.config.mjs'),
+    'prettier --write',
+  ],
   'packages/utils/**/*.{js,mjs,ts}': [
     eslintWith('packages/utils/eslint.config.js'),
     'prettier --write',

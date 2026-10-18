@@ -5,5 +5,7 @@
 declare namespace NodeJS {
   interface ProcessEnv {
     readonly EXPO_PUBLIC_API_URL?: string;
+    /** `1` muestra el catálogo /dev/ui fuera de desarrollo (ADR 0018). */
+    readonly EXPO_PUBLIC_DEV_CATALOG?: string;
   }
 }

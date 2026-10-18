@@ -8,6 +8,7 @@ Metas. Web PWA y Android primero; iOS al final.
 - Decisiones: [`docs/adr/`](docs/adr/README.md)
 - Flujo de cada fase (qué hace cada capa y quién la consume): [`docs/flujo/`](docs/flujo/README.md)
 - Pendientes: [`docs/todo/`](docs/todo/pendientes.md)
+- Comandos para verificar cada sub-fase: [`docs/comandos.md`](docs/comandos.md)
 
 ## Estructura
 
@@ -20,6 +21,8 @@ packages/
   config/     tsconfig, ESLint y Vitest compartidos
   contracts/  esquemas zod: la única fuente de verdad de los datos
   finance/    matemática financiera pura (decimal.js)
+  i18n/       textos de la UI en español e inglés (i18next)
+  ui/         design system Cristal Aurora (Unistyles, sin build)
   utils/      ids UUIDv7 y fechas
 tools/        autoprueba de los linters de arquitectura
 ```

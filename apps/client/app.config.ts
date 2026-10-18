@@ -40,8 +40,10 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
     predictiveBackGestureEnabled: false,
   },
   web: {
-    // Export estático para alojar la PWA gratis (plan §11).
-    output: 'static',
+    // Export estático de una sola página (index.html + JS) para alojar la PWA gratis (plan §11).
+    // `single` y no `static`: Expo Router no deja inyectar el CSS de Unistyles tras pre-renderizar
+    // (ADR 0012). La plantilla vive en public/index.html (sin parpadeo de tema).
+    output: 'single',
     favicon: './assets/images/favicon.png',
   },
   plugins: [

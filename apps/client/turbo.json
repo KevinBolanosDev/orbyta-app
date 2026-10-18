@@ -3,13 +3,56 @@
   "extends": ["//"],
   "tasks": {
     "build": {
-      "inputs": ["$TURBO_EXTENDS$", "!android/**", "!ios/**", "!dist/**"],
+      "inputs": [
+        "$TURBO_EXTENDS$",
+        "!android/**",
+        "!ios/**",
+        "!dist/**",
+        "$TURBO_ROOT$/packages/ui/src/**",
+        "$TURBO_ROOT$/packages/ui/package.json"
+      ],
       "outputs": ["dist/**"]
     },
-    "lint": { "inputs": ["$TURBO_DEFAULT$", "!android/**", "!ios/**", "!dist/**"] },
-    "typecheck": { "inputs": ["$TURBO_DEFAULT$", "!android/**", "!ios/**", "!dist/**"] },
+    "lint": {
+      "inputs": [
+        "$TURBO_DEFAULT$",
+        "!android/**",
+        "!ios/**",
+        "!dist/**",
+        "$TURBO_ROOT$/packages/ui/src/**",
+        "$TURBO_ROOT$/packages/ui/package.json"
+      ]
+    },
+    "typecheck": {
+      "inputs": [
+        "$TURBO_DEFAULT$",
+        "!android/**",
+        "!ios/**",
+        "!dist/**",
+        "$TURBO_ROOT$/packages/ui/src/**",
+        "$TURBO_ROOT$/packages/ui/package.json"
+      ]
+    },
     "arch": { "inputs": ["$TURBO_DEFAULT$", "!android/**", "!ios/**", "!dist/**"] },
-    "test": { "inputs": ["$TURBO_DEFAULT$", "!android/**", "!ios/**", "!dist/**"] },
-    "test:coverage": { "inputs": ["$TURBO_DEFAULT$", "!android/**", "!ios/**", "!dist/**"] }
+    "test": {
+      "inputs": [
+        "$TURBO_DEFAULT$",
+        "!android/**",
+        "!ios/**",
+        "!dist/**",
+        "$TURBO_ROOT$/packages/ui/src/**",
+        "$TURBO_ROOT$/packages/ui/package.json"
+      ]
+    },
+    "test:coverage": {
+      "inputs": [
+        "$TURBO_DEFAULT$",
+        "!android/**",
+        "!ios/**",
+        "!dist/**",
+        "$TURBO_ROOT$/packages/ui/src/**",
+        "$TURBO_ROOT$/packages/ui/package.json"
+      ]
+    }
   }
 }

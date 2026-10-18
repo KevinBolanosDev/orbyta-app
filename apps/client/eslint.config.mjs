@@ -109,7 +109,8 @@ export default [
   {
     // Archivos de config en CommonJS: se permite require().
     name: 'gravyx/client/config-files',
-    files: ['*.config.{js,mjs,ts}', 'jest.config.js'],
+    // Con prefijo `**/` porque lint-staged lanza ESLint desde la raíz del repo con `--config`.
+    files: ['**/*.config.{js,mjs,ts}', '**/jest.resolver.js', '**/workspace-singletons.js'],
     rules: { '@typescript-eslint/no-require-imports': 'off' },
   },
 ];
