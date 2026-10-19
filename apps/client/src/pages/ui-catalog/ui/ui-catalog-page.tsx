@@ -11,6 +11,7 @@ import { ChartsSection } from './sections/charts-section';
 import { ColorSection } from './sections/color-section';
 import { ComponentsSection } from './sections/components-section';
 import { FormsSection } from './sections/forms-section';
+import { GameSection } from './sections/game-section';
 import { GlassSection } from './sections/glass-section';
 import { LayoutSection } from './sections/layout-section';
 import { MotionSection } from './sections/motion-section';
@@ -52,6 +53,7 @@ export function UiCatalogPage() {
             <OverlaysSection />
             <FormsSection />
             <ChartsSection />
+            <GameSection />
           </View>
         </ScrollView>
       </ToastProvider>

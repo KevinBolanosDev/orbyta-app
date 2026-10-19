@@ -20,7 +20,9 @@ export type TextTone =
   | 'gain'
   | 'loss'
   | 'warning'
-  | 'onPrimary';
+  | 'onPrimary'
+  /** Sobre el degradado holo (HoloCard, medallas): tinta oscura en ambos temas. */
+  | 'onHolo';
 
 export interface TextProps extends NativeTextProps {
   /** Rol tipográfico (`type.<rol>`). Por defecto `bodyM`. */
@@ -85,6 +87,7 @@ const styles = StyleSheet.create((theme) => ({
         loss: { color: theme.colors.loss },
         warning: { color: theme.colors.warning },
         onPrimary: { color: theme.colors.onPrimary },
+        onHolo: { color: theme.holo.ink },
       },
     },
   },

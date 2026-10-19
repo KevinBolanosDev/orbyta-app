@@ -181,3 +181,30 @@ describe('UiCatalogPage · charts (F1.7)', () => {
     expect(screen.getByRole('image', { name: /^Hábito «Leer»: \d+ días/ })).toBeOnTheScreen();
   });
 });
+
+describe('UiCatalogPage · gamification (F1.8)', () => {
+  it('earns XP, levels up and unlocks an achievement', async () => {
+    await renderPage();
+    expect(screen.getAllByRole('image', { name: 'Nivel 12, Estratega' })).toHaveLength(3);
+    expect(screen.getByText('2.450 / 3.600 XP')).toBeOnTheScreen();
+
+    await fireEvent.press(screen.getByRole('button', { name: 'Registrar gasto · +5 XP' }));
+    expect(screen.getByText('2.455 / 3.600 XP')).toBeOnTheScreen();
+    await fireEvent.press(screen.getByRole('button', { name: 'Cumplir meta · +500 XP' }));
+    await fireEvent.press(screen.getByRole('button', { name: 'Cumplir meta · +500 XP' }));
+    await fireEvent.press(screen.getByRole('button', { name: 'Cumplir meta · +500 XP' }));
+    expect(screen.getByText('¡Subiste al nivel 13!')).toBeOnTheScreen();
+    expect(screen.getAllByRole('image', { name: 'Nivel 13, Estratega' })).toHaveLength(3);
+
+    await fireEvent.press(screen.getByRole('button', { name: 'Desbloquear logro' }));
+    expect(
+      screen.getByRole('alert', { name: 'Logro desbloqueado, Racha de 7 días, +50 XP' }),
+    ).toBeOnTheScreen();
+    expect(screen.getByLabelText(/^Racha de 7 días, desbloqueado el /)).toBeOnTheScreen();
+    await fireEvent.press(screen.getByRole('button', { name: 'Reiniciar' }));
+    expect(screen.getByLabelText('Racha de 7 días, en progreso, 6 / 7')).toBeOnTheScreen();
+    expect(
+      screen.getByLabelText('Racha de 5 días, en riesgo: hoy aún no registras'),
+    ).toHaveTextContent(/Registra hoy para no perderla/);
+  });
+});

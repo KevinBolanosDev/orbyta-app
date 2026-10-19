@@ -23,6 +23,8 @@ interface ProgressCommonProps extends Pick<ViewProps, 'style' | 'testID'> {
   accessibilityLabel: string;
   /** Lo que lee el lector de pantalla en vez del porcentaje ("$ 450.000 de $ 600.000"). */
   valueText?: string;
+  /** Color propio en vez del tono (la familia de un logro, X04). */
+  color?: string;
 }
 
 function toneColor(colors: SemanticColors, tone: ProgressToneProp, value: number): string {
@@ -61,6 +63,7 @@ export function ProgressBar({
   size = 'regular',
   accessibilityLabel,
   valueText,
+  color: customColor,
   style,
   testID,
 }: ProgressBarProps) {
@@ -69,7 +72,7 @@ export function ProgressBar({
   const fillStyle = useAnimatedStyle(() => ({ width: `${progress.get() * 100}%` }));
   // Los colores con alfa se calculan aquí: en web, dentro de StyleSheet.create son variables CSS.
   const track = withAlpha(theme.colors.inkSubtle, 0.22);
-  const color = toneColor(theme.colors, tone, value);
+  const color = customColor ?? toneColor(theme.colors, tone, value);
 
   return (
     <View
@@ -98,6 +101,7 @@ export function ProgressRing({
   strokeWidth = componentSize.progressRing.strokeWidth,
   accessibilityLabel,
   valueText,
+  color: customColor,
   children,
   style,
   testID,
@@ -111,7 +115,7 @@ export function ProgressRing({
     strokeOpacity: progress.get() > 0.001 ? 1 : 0,
   }));
   const track = withAlpha(theme.colors.inkSubtle, 0.22);
-  const color = toneColor(theme.colors, tone, value);
+  const color = customColor ?? toneColor(theme.colors, tone, value);
 
   return (
     <View
@@ -119,28 +123,31 @@ export function ProgressRing({
       style={[styles.ring(size), style]}
       testID={testID}
     >
-      {/* Girado −90°: el trazo de un círculo SVG arranca a la derecha y aquí debe empezar arriba. */}
-      <Svg width={size} height={size} style={styles.ringSvg}>
-        <Circle
-          cx={center}
-          cy={center}
-          r={radius}
-          stroke={track}
-          strokeWidth={strokeWidth}
-          fill="none"
-        />
-        <AnimatedCircle
-          cx={center}
-          cy={center}
-          r={radius}
-          stroke={color}
-          strokeWidth={strokeWidth}
-          strokeLinecap="round"
-          strokeDasharray={circumference}
-          fill="none"
-          animatedProps={arcProps}
-        />
-      </Svg>
+      {/* Girado −90°: el trazo de un círculo SVG arranca a la derecha y aquí debe empezar arriba.
+          El giro y la posición van en una View: en web, Unistyles no aplica estilos al Svg. */}
+      <View style={styles.ringSvg}>
+        <Svg width={size} height={size}>
+          <Circle
+            cx={center}
+            cy={center}
+            r={radius}
+            stroke={track}
+            strokeWidth={strokeWidth}
+            fill="none"
+          />
+          <AnimatedCircle
+            cx={center}
+            cy={center}
+            r={radius}
+            stroke={color}
+            strokeWidth={strokeWidth}
+            strokeLinecap="round"
+            strokeDasharray={circumference}
+            fill="none"
+            animatedProps={arcProps}
+          />
+        </Svg>
+      </View>
       {children}
     </View>
   );

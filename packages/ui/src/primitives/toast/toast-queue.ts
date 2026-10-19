@@ -1,5 +1,7 @@
 // Cola de toasts (P23) como funciones puras, probadas sin React.
 
+import type { IconComponent } from '../icon/icon';
+
 /** info · success (éxito) · error · undo (deshacer, con acción). */
 export type ToastTone = 'info' | 'success' | 'error' | 'undo';
 
@@ -9,8 +11,18 @@ export interface ToastOptions {
   /** Texto de la acción ("Deshacer"); se muestra si también hay `onAction`. */
   actionLabel?: string;
   onAction?: () => void;
-  /** Tiempo en pantalla en ms; por defecto 4 s, o 6 s si tiene acción. */
+  /** Tiempo en pantalla en ms; por defecto 4 s, 6 s si tiene acción y 5 s si es un logro. */
   duration?: number;
+  /** X05: se muestra como toast de logro; `message` es el título del logro. */
+  achievement?: ToastAchievement;
+}
+
+export interface ToastAchievement {
+  /** "LOGRO DESBLOQUEADO". */
+  overline: string;
+  /** "+50 XP". */
+  xp?: string;
+  icon?: IconComponent;
 }
 
 export interface ToastEntry extends ToastOptions {

@@ -17,6 +17,7 @@ import { View } from 'react-native';
 import Animated, { useAnimatedStyle } from 'react-native-reanimated';
 import { StyleSheet, useUnistyles } from 'react-native-unistyles';
 
+import { AchievementToast } from '../../game/achievement-toast';
 import { useReduceMotion } from '../../motion/accessibility-preferences';
 import { settledOpacity } from '../../motion/motion-math';
 import { usePresence } from '../../motion/use-presence';
@@ -88,7 +89,7 @@ export function ToastProvider({
         ...options,
         id,
         tone: options.tone ?? 'info',
-        duration: options.duration ?? (options.onAction ? timing.toastWithAction : timing.toast),
+        duration: options.duration ?? defaultDuration(options),
         leaving: false,
       };
       setQueue((current) => enqueueToast(current, entry, maxVisible));
@@ -117,6 +118,11 @@ export function ToastProvider({
       </View>
     </ToastContext>
   );
+}
+
+function defaultDuration(options: ToastOptions): number {
+  if (options.achievement) return timing.achievementToast;
+  return options.onAction ? timing.toastWithAction : timing.toast;
 }
 
 type Placement = 'top' | 'bottom';
@@ -199,18 +205,38 @@ function ToastItem({
     };
   }, [id, leaving, visibleFor, onDismiss]);
 
-  // M01 desde el borde donde aparece: baja si está arriba, sube si está abajo.
-  const offset = reduceMotion
-    ? 0
-    : placement === 'top'
-      ? -distance.enterOffset
-      : distance.enterOffset;
+  // M01 desde el borde donde aparece: baja si está arriba, sube si está abajo. El logro trae su
+  // propia entrada (M07).
+  const offset =
+    reduceMotion || toast.achievement
+      ? 0
+      : placement === 'top'
+        ? -distance.enterOffset
+        : distance.enterOffset;
   // El fundido va al relleno del vidrio (`fade`) y al contenido, no al contenedor (ver GlassSurface).
   const slideStyle = useAnimatedStyle(() => ({
     transform: [{ translateY: (1 - progress.get()) * offset }],
   }));
   const fadeStyle = useAnimatedStyle(() => ({ opacity: settledOpacity(progress.get()) }));
   if (!mounted) return null;
+
+  if (toast.achievement) {
+    return (
+      <Animated.View style={[styles.item, slideStyle]}>
+        <AchievementToast
+          overline={toast.achievement.overline}
+          title={toast.message}
+          {...(toast.achievement.xp ? { xp: toast.achievement.xp } : {})}
+          {...(toast.achievement.icon ? { icon: toast.achievement.icon } : {})}
+          fade={progress}
+          dismissLabel={dismissLabel}
+          onDismiss={() => {
+            onDismiss(id);
+          }}
+        />
+      </Animated.View>
+    );
+  }
 
   const color = toneColor(theme.colors, toast.tone);
   return (

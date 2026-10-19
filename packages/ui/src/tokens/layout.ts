@@ -95,6 +95,12 @@ export const componentSize = {
   dialogMaxWidth: 560,
   /** P23 · Ancho máximo del toast fuera de `compact`. */
   toastMaxWidth: 400,
+  /** X01 · Lado del hexágono de nivel por tamaño. */
+  levelBadge: { s: 32, m: 48, l: 72 },
+  /** X04 · Medalla del logro. */
+  achievementMedal: 64,
+  /** X05 · Ícono holo del toast de logro. */
+  achievementToastIcon: 44,
 } as const;
 
 /** Por debajo de este tamaño un módulo se pinta con su glifo y no con su ícono de marca (§11.5). */

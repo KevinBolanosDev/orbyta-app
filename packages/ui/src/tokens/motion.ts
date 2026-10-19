@@ -100,6 +100,10 @@ export const timing = {
   priceFlash: 600,
   /** X07 "+XP" flotante. */
   xpFloat: 700,
+  /** X03 medio latido de la llama cuando la racha está en riesgo (sube y baja en bucle). */
+  streakPulse: 1200,
+  /** X05 tiempo en pantalla del toast de logro. */
+  achievementToast: 5000,
   /** M20 una vuelta de la órbita del logo. */
   orbitTurn: 36_000,
   /** M21 entrada completa del logo (máximo). */

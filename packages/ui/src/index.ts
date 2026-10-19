@@ -73,6 +73,7 @@ export {
   CURRENCY_PREFIX,
   deltaDirection,
   formatAmount,
+  formatCount,
   formatPercent,
   maskedAmount,
   MINUS,
@@ -160,7 +161,11 @@ export {
   type ToastApi,
   type ToastProviderProps,
 } from './primitives/toast/toast';
-export { type ToastOptions, type ToastTone } from './primitives/toast/toast-queue';
+export {
+  type ToastAchievement,
+  type ToastOptions,
+  type ToastTone,
+} from './primitives/toast/toast-queue';
 
 // Formularios y listas (F1.6).
 export {
@@ -235,6 +240,30 @@ export { HeatmapCalendar, type HeatmapCalendarProps } from './charts/heatmap-cal
 export { Sparkline, type SparklineProps } from './charts/sparkline';
 export { useScrubber } from './charts/use-scrubber';
 export { StatTile, type StatTileProps } from './primitives/stat-tile/stat-tile';
+
+// Gamificación X01–X07 y curva de XP (F1.8, §5 y §7.3).
+export {
+  AchievementBadge,
+  type AchievementBadgeProps,
+  type AchievementFamily,
+  type AchievementState,
+} from './game/achievement-badge';
+export { AchievementToast, type AchievementToastProps } from './game/achievement-toast';
+export { MAX_TILT, tiltFromPoint, tiltFromRotation, type Tilt } from './game/game-math';
+export { HoloCard, type HoloCardProps } from './game/holo-card';
+export { LevelBadge, type LevelBadgeProps, type LevelBadgeSize } from './game/level-badge';
+export { StreakCounter, type StreakCounterProps } from './game/streak-counter';
+export {
+  levelFromXp,
+  levelTier,
+  totalXpForLevel,
+  XP_STEP,
+  xpToNextLevel,
+  type LevelProgress,
+  type LevelTier,
+} from './game/xp';
+export { XPBar, type XPBarProps } from './game/xp-bar';
+export { XPFloat, type XPFloatHandle, type XPFloatProps } from './game/xp-float';
 
 // Primitivas base.
 export {

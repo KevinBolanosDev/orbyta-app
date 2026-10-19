@@ -111,3 +111,10 @@ export function formatPercent(
   const percent = locale === 'es-CO' ? ' %' : '%';
   return `${arrow}${signOf(parsed, 'always')}${digits(parsed, locale, decimals)}${percent}`;
 }
+
+/** Conteo entero (XP, días, niveles) con separador de miles: `3600` → `3.600` (es-CO). */
+export function formatCount(value: number, locale: NumberLocale = 'es-CO'): string {
+  const rounded = Math.round(value);
+  const parsed = parseDecimal(Math.abs(rounded).toString());
+  return `${rounded < 0 ? MINUS : ''}${digits(parsed, locale, 0)}`;
+}

@@ -48,6 +48,7 @@ export function useToneColor(tone: TextTone | undefined): string | undefined {
     loss: theme.colors.loss,
     warning: theme.colors.warning,
     onPrimary: theme.colors.onPrimary,
+    onHolo: theme.holo.ink,
   };
   return map[tone];
 }
