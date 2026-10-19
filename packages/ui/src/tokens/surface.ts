@@ -110,10 +110,13 @@ export const glass: Readonly<Record<ColorScheme, GlassTheme>> = {
 
 /** Medidas fijas del vidrio, el reflejo y la aurora (§3.1–§3.3). */
 export const glassGeometry = {
-  /** Esquinas HUD en L de las tarjetas héroe. */
-  hudCorner: { size: 20, strokeWidth: 2 },
-  /** Reflejo holográfico: franja inclinada que cruza la superficie. */
-  sheen: { angleDeg: -20, widthRatio: 0.28, staticOpacity: 0.5 },
+  /** Esquinas HUD en L de las tarjetas héroe; `inset` las aleja del borde redondeado. */
+  hudCorner: { size: 20, strokeWidth: 2, inset: 12 },
+  /**
+   * Reflejo holográfico: franja inclinada que cruza la superficie. El centro de la franja va de
+   * `from` a `to` (fracciones del ancho), así empieza y termina fuera de la tarjeta.
+   */
+  sheen: { angleDeg: -20, widthRatio: 0.28, staticOpacity: 0.5, from: -0.4, to: 1.4 },
   /** Fondo aurora: orbes difuminados y rejilla HUD. */
   aurora: { orbBlur: 90, gridSize: 48, dimmedOpacity: 0.5 },
 } as const;

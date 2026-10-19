@@ -6,8 +6,27 @@ import { Text, THEME_PREFERENCES, useThemePreference } from '@/shared/ui';
 
 import { ChoiceGroup } from './choice-group';
 
-/** Encabezado del catálogo: título, cambio de tema e idioma y breakpoint actual. */
-export function CatalogToolbar() {
+/** `system` sigue al sistema; `reduced` fuerza la opción de accesibilidad en el catálogo. */
+export type A11yOverride = 'system' | 'reduced';
+
+const A11Y_OVERRIDES: readonly A11yOverride[] = ['system', 'reduced'];
+
+interface CatalogToolbarProps {
+  motion: A11yOverride;
+  onMotionChange: (value: A11yOverride) => void;
+  transparency: A11yOverride;
+  onTransparencyChange: (value: A11yOverride) => void;
+}
+
+/**
+ * Encabezado del catálogo: título; tema, idioma, movimiento y transparencia; breakpoint actual.
+ */
+export function CatalogToolbar({
+  motion,
+  onMotionChange,
+  transparency,
+  onTransparencyChange,
+}: CatalogToolbarProps) {
   const { t } = useTranslation();
   const { rt } = useUnistyles();
   const [themePreference, setThemePreference] = useThemePreference();
@@ -38,6 +57,24 @@ export function CatalogToolbar() {
           options={SUPPORTED_LANGUAGES.map((code) => ({
             value: code,
             label: t(`preferences.language.${code}`),
+          }))}
+        />
+        <ChoiceGroup
+          label={t('catalog.controls.motion.label')}
+          value={motion}
+          onChange={onMotionChange}
+          options={A11Y_OVERRIDES.map((value) => ({
+            value,
+            label: t(`catalog.controls.motion.${value}`),
+          }))}
+        />
+        <ChoiceGroup
+          label={t('catalog.controls.transparency.label')}
+          value={transparency}
+          onChange={onTransparencyChange}
+          options={A11Y_OVERRIDES.map((value) => ({
+            value,
+            label: t(`catalog.controls.transparency.${value}`),
           }))}
         />
       </View>

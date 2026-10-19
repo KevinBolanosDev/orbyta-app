@@ -112,3 +112,6 @@ export const distance = {
   /** M09 deriva máxima de los orbes. */
   orbDrift: 60,
 } as const;
+
+/** M02: escala mientras se presiona (vuelve a 1 con `spring.press`). */
+export const PRESSED_SCALE = 0.96;

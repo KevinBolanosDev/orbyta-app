@@ -7,6 +7,7 @@ module.exports = {
     'node_modules/(?!(.pnpm|(jest-)?react-native|@react-native(-community)?|expo(nent)?|@expo(nent)?/.*|@expo-google-fonts/.*|react-native-svg|standard-navigation))',
   ],
   setupFiles: ['<rootDir>/jest.setup.ts'],
+  resolver: '<rootDir>/jest.resolver.js',
   // En frío, la transformación de Babel en Windows/CI puede pasar los 5 s por defecto de Jest.
   testTimeout: 30_000,
   testMatch: ['<rootDir>/src/**/*.test.{ts,tsx}'],

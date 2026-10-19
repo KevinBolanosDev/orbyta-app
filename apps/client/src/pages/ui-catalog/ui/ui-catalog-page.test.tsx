@@ -1,10 +1,14 @@
-import { act, fireEvent, render, screen } from '@testing-library/react-native';
+import { act, fireEvent, render, screen, within } from '@testing-library/react-native';
 import { UnistylesRuntime } from 'react-native-unistyles';
 
 import { i18n } from '@/shared/i18n';
 import { setThemePreference } from '@/shared/ui';
 
 import { UiCatalogPage } from './ui-catalog-page';
+
+// Varios grupos tienen "Sistema": se busca la opción dentro del grupo (su accessibilityLabel).
+const radioIn = (group: string, option: string) =>
+  within(screen.getByLabelText(group)).getByRole('radio', { name: option });
 
 describe('UiCatalogPage', () => {
   // La página sigue montada aquí (la limpieza de Testing Library corre después), así que volver al
@@ -16,7 +20,7 @@ describe('UiCatalogPage', () => {
     });
   });
 
-  it('shows every F1.1 section in Spanish', async () => {
+  it('shows every F1.1 and F1.2 section in Spanish', async () => {
     await render(<UiCatalogPage />);
     expect(screen.getByRole('header', { name: 'Catálogo de UI' })).toBeOnTheScreen();
     for (const section of [
@@ -28,6 +32,8 @@ describe('UiCatalogPage', () => {
       'Espaciado',
       'Radios',
       'Elevación',
+      'Vidrio y aurora',
+      'Movimiento',
     ]) {
       expect(screen.getByRole('header', { name: section })).toBeOnTheScreen();
     }
@@ -44,10 +50,28 @@ describe('UiCatalogPage', () => {
   it('applies the chosen theme without leaving the page', async () => {
     const setTheme = jest.spyOn(UnistylesRuntime, 'setTheme');
     await render(<UiCatalogPage />);
-    await fireEvent.press(screen.getByRole('radio', { name: 'Oscuro' }));
+    await fireEvent.press(radioIn('Tema', 'Oscuro'));
     expect(setTheme).toHaveBeenCalledWith('dark');
-    expect(screen.getByRole('radio', { name: 'Oscuro' })).toBeChecked();
-    expect(screen.getByRole('radio', { name: 'Sistema' })).not.toBeChecked();
+    expect(radioIn('Tema', 'Oscuro')).toBeChecked();
+    expect(radioIn('Tema', 'Sistema')).not.toBeChecked();
     setTheme.mockRestore();
+  });
+
+  it('forces reduced motion, reduced transparency and the dimmed aurora', async () => {
+    await render(<UiCatalogPage />);
+    await fireEvent.press(radioIn('Movimiento', 'Reducido'));
+    await fireEvent.press(radioIn('Transparencia', 'Reducida'));
+    await fireEvent.press(radioIn('Aurora', 'Atenuada'));
+    expect(radioIn('Movimiento', 'Reducido')).toBeChecked();
+    expect(radioIn('Transparencia', 'Reducida')).toBeChecked();
+    expect(radioIn('Aurora', 'Atenuada')).toBeChecked();
+  });
+
+  it('replays the motion demos', async () => {
+    await render(<UiCatalogPage />);
+    await fireEvent.press(screen.getByRole('button', { name: 'Repetir animaciones' }));
+    const pressDemo = screen.getByRole('button', { name: 'M02 · Presión (tócame)' });
+    await fireEvent.press(pressDemo);
+    expect(within(pressDemo).getByText('1')).toBeOnTheScreen();
   });
 });

@@ -24,7 +24,7 @@ export default [
   {
     // Archivos de config en CommonJS: se permite require().
     name: 'gravyx/ui/config-files',
-    files: ['*.config.{js,mjs,ts}', 'babel.config.js', 'jest.config.js'],
+    files: ['**/*.config.{js,mjs,ts}', '**/jest.resolver.js'],
     rules: { '@typescript-eslint/no-require-imports': 'off' },
   },
 ];

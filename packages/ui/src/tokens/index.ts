@@ -40,6 +40,7 @@ export {
   EXIT_DURATION_RATIO,
   exitDuration,
   MAX_STAGGERED_ROWS,
+  PRESSED_SCALE,
   spring,
   stagger,
   timing,

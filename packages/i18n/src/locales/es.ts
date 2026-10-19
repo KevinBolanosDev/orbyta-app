@@ -39,8 +39,39 @@ export const es = {
       spacing: 'Espaciado',
       radius: 'Radios',
       elevation: 'Elevación',
-      glass: 'Niveles de vidrio',
+      glass: 'Vidrio y aurora',
       motion: 'Movimiento',
+    },
+    controls: {
+      motion: {
+        label: 'Movimiento',
+        system: 'Sistema',
+        reduced: 'Reducido',
+      },
+      transparency: {
+        label: 'Transparencia',
+        system: 'Sistema',
+        reduced: 'Reducida',
+      },
+      aurora: {
+        label: 'Aurora',
+        full: 'Completa',
+        dimmed: 'Atenuada',
+      },
+      replay: 'Repetir animaciones',
+    },
+    glass: {
+      chrome: 'glass.chrome · encabezado y barra',
+      card: 'glass.card · tarjeta héroe con HUD y reflejo',
+      sheet: 'glass.sheet · hojas y diálogos',
+    },
+    motion: {
+      enter: 'M01 · Entrada',
+      press: 'M02 · Presión (tócame)',
+      countUp: 'M03 · Conteo de cifras',
+      draw: 'M04 · Dibujo de línea',
+      progress: 'M05 · Relleno de progreso',
+      sheen: 'M08 · Reflejo holográfico',
     },
     samples: {
       heading: 'Patrimonio neto',

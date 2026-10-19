@@ -40,8 +40,39 @@ export const en: TranslationResource = {
       spacing: 'Spacing',
       radius: 'Radii',
       elevation: 'Elevation',
-      glass: 'Glass levels',
+      glass: 'Glass and aurora',
       motion: 'Motion',
+    },
+    controls: {
+      motion: {
+        label: 'Motion',
+        system: 'System',
+        reduced: 'Reduced',
+      },
+      transparency: {
+        label: 'Transparency',
+        system: 'System',
+        reduced: 'Reduced',
+      },
+      aurora: {
+        label: 'Aurora',
+        full: 'Full',
+        dimmed: 'Dimmed',
+      },
+      replay: 'Replay animations',
+    },
+    glass: {
+      chrome: 'glass.chrome · header and bars',
+      card: 'glass.card · hero card with HUD and sheen',
+      sheet: 'glass.sheet · sheets and dialogs',
+    },
+    motion: {
+      enter: 'M01 · Enter',
+      press: 'M02 · Press (tap me)',
+      countUp: 'M03 · Number count-up',
+      draw: 'M04 · Line draw',
+      progress: 'M05 · Progress fill',
+      sheen: 'M08 · Holographic sheen',
     },
     samples: {
       heading: 'Net worth',
