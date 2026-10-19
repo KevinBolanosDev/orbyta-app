@@ -1,54 +1,73 @@
 import type { ReactNode } from 'react';
-import { ScrollView, StyleSheet, Text, TextInput, View, type TextInputProps } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { ScrollView, TextInput, View, type TextInputProps } from 'react-native';
+import { StyleSheet, useUnistyles } from 'react-native-unistyles';
 
-// TODO(F1): reemplazar por los componentes Cristal Aurora de @repo/ui (design-system.md §7).
-// Son simples a propósito: F0 solo prueba el cableado entre capas.
+import { AuroraBackground, Text } from '@repo/ui';
 
+// Piezas provisionales que todavía no existen en @repo/ui. Usan el tema de Cristal Aurora.
+
+/**
+ * Pantalla con fondo aurora y contenido con scroll y márgenes seguros.
+ * TODO(F2): reemplazar por el layout de pantalla con AppHeader y tab bar (design-system.md §6.1).
+ */
 export function Screen({ children }: { children: ReactNode }) {
   return (
-    <SafeAreaView style={styles.screen}>
-      <ScrollView contentContainerStyle={styles.content}>{children}</ScrollView>
-    </SafeAreaView>
-  );
-}
-
-export function Card({ children }: { children: ReactNode }) {
-  return <View style={styles.card}>{children}</View>;
-}
-
-export function Title({ children }: { children: ReactNode }) {
-  return (
-    <Text accessibilityRole="header" style={styles.title}>
-      {children}
-    </Text>
-  );
-}
-
-export function Body({ children, testID }: { children: ReactNode; testID?: string }) {
-  return (
-    <Text style={styles.body} testID={testID}>
-      {children}
-    </Text>
-  );
-}
-
-export function Field({ label, ...props }: TextInputProps & { label: string }) {
-  return (
-    <View style={styles.field}>
-      <Text style={styles.label}>{label}</Text>
-      <TextInput accessibilityLabel={label} inputMode="decimal" style={styles.input} {...props} />
+    <View style={styles.screen}>
+      <AuroraBackground />
+      <ScrollView contentContainerStyle={styles.content}>
+        <View style={styles.column}>{children}</View>
+      </ScrollView>
     </View>
   );
 }
 
-const styles = StyleSheet.create({
-  screen: { flex: 1 },
-  content: { padding: 16, gap: 16 },
-  card: { borderRadius: 16, borderWidth: 1, borderColor: '#8884', padding: 16, gap: 8 },
-  title: { fontSize: 20, fontWeight: '600' },
-  body: { fontSize: 16 },
-  field: { gap: 4 },
-  label: { fontSize: 14 },
-  input: { borderWidth: 1, borderColor: '#8886', borderRadius: 8, padding: 8, minHeight: 44 },
-});
+/** Campo de texto con etiqueta. TODO(F1.6): reemplazar por P07 TextField / P08 MoneyInput. */
+export function Field({ label, ...props }: TextInputProps & { label: string }) {
+  const { theme } = useUnistyles();
+  return (
+    <View style={styles.field}>
+      <Text variant="label" tone="muted">
+        {label}
+      </Text>
+      <TextInput
+        accessibilityLabel={label}
+        inputMode="decimal"
+        placeholderTextColor={theme.colors.inkSubtle}
+        style={styles.input}
+        {...props}
+      />
+    </View>
+  );
+}
+
+const styles = StyleSheet.create((theme, rt) => ({
+  screen: {
+    flex: 1,
+    backgroundColor: theme.colors.bg,
+  },
+  content: {
+    paddingTop: rt.insets.top + theme.space[6],
+    paddingBottom: rt.insets.bottom + theme.space[12],
+    paddingHorizontal: theme.layout.screenGutter,
+  },
+  column: {
+    width: '100%',
+    maxWidth: theme.layout.contentMaxWidth,
+    alignSelf: 'center',
+    gap: theme.layout.cardGap,
+  },
+  field: {
+    gap: theme.space[2],
+  },
+  input: {
+    minHeight: theme.layout.minTouchTarget,
+    paddingHorizontal: theme.space[4],
+    borderRadius: theme.radius.m,
+    borderWidth: 1,
+    borderColor: theme.glass.card.border,
+    backgroundColor: theme.glass.card.fill,
+    color: theme.colors.ink,
+    fontFamily: theme.font.mono400,
+    fontSize: 16,
+  },
+}));

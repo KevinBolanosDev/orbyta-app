@@ -37,8 +37,6 @@ export interface SemanticColors {
   glow: string;
   /** Fondo detrás de hojas y diálogos. */
   scrim: string;
-  /** Rejilla HUD del fondo. */
-  grid: string;
   /** Orbes de la aurora: primary, accent y secondary con alfa. */
   orb1: string;
   orb2: string;
@@ -79,7 +77,6 @@ export const darkColors: SemanticColors = {
   focus: dark.primary,
   glow: 'rgba(46,230,242,0.35)',
   scrim: 'rgba(2,4,10,0.62)',
-  grid: 'rgba(46,230,242,0.05)',
   orb1: withAlpha(dark.primary, 0.5),
   orb2: withAlpha(dark.accent, 0.5),
   orb3: withAlpha(dark.secondary, 0.5),
@@ -91,7 +88,6 @@ export const lightColors: SemanticColors = {
   focus: light.primary,
   glow: 'rgba(8,120,127,0.30)',
   scrim: 'rgba(11,21,48,0.35)',
-  grid: 'rgba(11,21,48,0.05)',
   orb1: withAlpha(light.primary, 0.35),
   orb2: withAlpha(light.accent, 0.35),
   orb3: withAlpha(light.secondary, 0.35),

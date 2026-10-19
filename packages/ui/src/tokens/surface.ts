@@ -117,6 +117,6 @@ export const glassGeometry = {
    * `from` a `to` (fracciones del ancho), así empieza y termina fuera de la tarjeta.
    */
   sheen: { angleDeg: -20, widthRatio: 0.28, staticOpacity: 0.5, from: -0.4, to: 1.4 },
-  /** Fondo aurora: orbes difuminados y rejilla HUD. */
-  aurora: { orbBlur: 90, gridSize: 48, dimmedOpacity: 0.5 },
+  /** Fondo aurora: orbes difuminados y cortinas de aurora (sin rejilla, decidido en F1.4). */
+  aurora: { orbBlur: 90, dimmedOpacity: 0.5 },
 } as const;

@@ -8,6 +8,9 @@ module.exports = {
   ],
   moduleNameMapper: {
     '^@/(.*)$': '<rootDir>/src/$1',
+    // Lucide publica sus íconos en ESM (.mjs) para React Native; en Jest se usa su versión CommonJS.
+    '^lucide-react-native/icons/(.*)$':
+      '<rootDir>/node_modules/lucide-react-native/dist/cjs/icons/$1.js',
   },
   // Copia única de módulos nativos + resolvers de Reanimated y React Native (ADR 0019).
   resolver: '<rootDir>/jest.resolver.js',

@@ -7,6 +7,11 @@ module.exports = {
     'node_modules/(?!(.pnpm|(jest-)?react-native|@react-native(-community)?|expo(nent)?|@expo(nent)?/.*|@expo-google-fonts/.*|react-native-svg|standard-navigation))',
   ],
   setupFiles: ['<rootDir>/jest.setup.ts'],
+  // Lucide publica sus íconos en ESM (.mjs) para React Native; en Jest se usa su versión CommonJS.
+  moduleNameMapper: {
+    '^lucide-react-native/icons/(.*)$':
+      '<rootDir>/node_modules/lucide-react-native/dist/cjs/icons/$1.js',
+  },
   resolver: '<rootDir>/jest.resolver.js',
   // En frío, la transformación de Babel en Windows/CI puede pasar los 5 s por defecto de Jest.
   testTimeout: 30_000,

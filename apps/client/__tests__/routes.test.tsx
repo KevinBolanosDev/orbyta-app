@@ -21,7 +21,7 @@ describe('routes', () => {
 
   it('renders the wiring page at /', async () => {
     await renderRouter(routes);
-    expect(await screen.findByText('Gravyx Ascenda')).toBeOnTheScreen();
+    expect(await screen.findByRole('image', { name: 'Gravyx Ascenda' })).toBeOnTheScreen();
   });
 
   it('renders the UI catalog at /dev/ui in development', async () => {
@@ -31,12 +31,14 @@ describe('routes', () => {
 
   it('opens the UI catalog from the home page link', async () => {
     await renderRouter(routes);
-    await fireEvent.press(await screen.findByRole('link', { name: 'Catálogo de UI' }));
+    await fireEvent.press(await screen.findByRole('button', { name: 'Abrir el catálogo de UI' }));
     expect(await screen.findByRole('header', { name: 'Catálogo de UI' })).toBeOnTheScreen();
   });
 
   it('renders the not-found page for unknown paths', async () => {
     await renderRouter(routes, { initialUrl: '/does-not-exist' });
-    expect(await screen.findByText('Page not found')).toBeOnTheScreen();
+    expect(
+      await screen.findByRole('header', { name: 'No encontramos esta página' }),
+    ).toBeOnTheScreen();
   });
 });

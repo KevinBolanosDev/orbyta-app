@@ -27,7 +27,7 @@ describe('UiCatalogPage', () => {
     });
   });
 
-  it('shows every F1.1, F1.2 and F1.3 section in Spanish', async () => {
+  it('shows every F1 section in Spanish', async () => {
     await render(<UiCatalogPage />);
     expect(screen.getByRole('header', { name: 'Catálogo de UI' })).toBeOnTheScreen();
     for (const section of [
@@ -42,6 +42,7 @@ describe('UiCatalogPage', () => {
       'Vidrio y aurora',
       'Movimiento',
       'Marca',
+      'Componentes',
     ]) {
       expect(screen.getByRole('header', { name: section })).toBeOnTheScreen();
     }
@@ -92,5 +93,14 @@ describe('UiCatalogPage', () => {
     expect(stocks).not.toBeSelected();
     await fireEvent.press(screen.getByRole('button', { name: 'Repetir entrada' }));
     expect(screen.getAllByRole('image', { name: 'Gravyx Ascenda' }).length).toBeGreaterThan(0);
+  });
+
+  it('hides the sample amounts with the privacy toggle', async () => {
+    await render(<UiCatalogPage />);
+    expect(screen.getByText('US$ 1.234,56')).toBeOnTheScreen();
+    await fireEvent.press(screen.getByRole('button', { name: 'Ocultar montos' }));
+    expect(screen.queryByText('US$ 1.234,56')).toBeNull();
+    expect(screen.getAllByLabelText('Monto oculto').length).toBeGreaterThan(0);
+    expect(screen.getByRole('button', { name: 'Mostrar montos' })).toBeSelected();
   });
 });

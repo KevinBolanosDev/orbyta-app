@@ -1,15 +1,20 @@
-import { Body } from '@/shared/ui';
+import { useTranslation } from '@/shared/i18n';
+import { Badge, type BadgeTone } from '@/shared/ui';
 
 import type { SystemStatus } from '../model/system-status';
 
-// TODO(F1): los textos pasan a @repo/i18n (es/en).
-const LABELS: Record<SystemStatus['kind'], string> = {
-  checking: 'Checking API…',
-  online: 'API online',
-  offline: 'API offline',
+const TONE: Record<SystemStatus['kind'], BadgeTone> = {
+  checking: 'neutral',
+  online: 'gain',
+  offline: 'loss',
 };
 
+/** Estado del API como insignia: consultando, en línea (con versión) o sin conexión. */
 export function StatusBadge({ status }: { status: SystemStatus }) {
-  const detail = status.kind === 'online' ? ` · v${status.health.version}` : '';
-  return <Body testID="system-status">{`${LABELS[status.kind]}${detail}`}</Body>;
+  const { t } = useTranslation();
+  const label =
+    status.kind === 'online'
+      ? t('wiring.api.online', { version: status.health.version })
+      : t(`wiring.api.${status.kind}`);
+  return <Badge tone={TONE[status.kind]} label={label} testID="system-status" />;
 }

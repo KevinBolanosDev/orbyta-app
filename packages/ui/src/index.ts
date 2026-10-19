@@ -65,7 +65,62 @@ export {
   type WordmarkProps,
 } from './brand/ui/wordmark';
 
-// Primitivas.
+// Formato de montos y porcentajes para mostrar (texto decimal, sin pasar por `number`).
+export {
+  CURRENCY_DECIMALS,
+  CURRENCY_PREFIX,
+  deltaDirection,
+  formatAmount,
+  formatPercent,
+  maskedAmount,
+  MINUS,
+  type AmountCurrency,
+  type DeltaDirection,
+  type NumberLocale,
+  type SignDisplay,
+} from './lib/format-number';
+
+// Primitivas de contenido y acción (F1.4).
+export {
+  AmountPrivacyProvider,
+  AmountText,
+  DeltaText,
+  useAmountPrivacy,
+  type AmountTextProps,
+  type DeltaTextProps,
+} from './primitives/amount-text/amount-text';
+export { Avatar, type AvatarProps } from './primitives/avatar/avatar';
+export { Badge, type BadgeProps, type BadgeTone } from './primitives/badge/badge';
+export {
+  Button,
+  type ButtonProps,
+  type ButtonSize,
+  type ButtonVariant,
+} from './primitives/button/button';
+export { Card, type CardProps } from './primitives/card/card';
+export { Chip, type ChipProps, type ChipVariant } from './primitives/chip/chip';
+export {
+  EmptyState,
+  ErrorState,
+  type EmptyStateProps,
+  type ErrorStateProps,
+} from './primitives/feedback-state/feedback-state';
+export {
+  Icon,
+  IconColorProvider,
+  type IconComponent,
+  type IconProps,
+  type IconSize,
+} from './primitives/icon/icon';
+export {
+  IconButton,
+  type IconButtonProps,
+  type IconButtonVariant,
+} from './primitives/icon-button/icon-button';
+export { SectionHeader, type SectionHeaderProps } from './primitives/section-header/section-header';
+export { Skeleton, type SkeletonProps, type SkeletonShape } from './primitives/skeleton/skeleton';
+
+// Primitivas base.
 export {
   AuroraBackground,
   type AuroraBackgroundProps,

@@ -1,13 +1,14 @@
 import { StatusBadge } from '@/entities/system-status';
-import { Card, Title } from '@/shared/ui';
+import { useTranslation } from '@/shared/i18n';
+import { Card, SectionHeader } from '@/shared/ui';
 
 import { useSystemStatus } from '../model/use-system-status';
 
 export function ApiStatusCard() {
+  const { t } = useTranslation();
   const status = useSystemStatus();
   return (
-    <Card>
-      <Title>Backend</Title>
+    <Card header={<SectionHeader title={t('wiring.api.title')} />} enterIndex={1}>
       <StatusBadge status={status} />
     </Card>
   );

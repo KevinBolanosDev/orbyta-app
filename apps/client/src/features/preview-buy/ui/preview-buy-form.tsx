@@ -1,61 +1,73 @@
-import { Button } from 'react-native';
+import Calculator from 'lucide-react-native/icons/calculator';
+import { View } from 'react-native';
+import { StyleSheet } from 'react-native-unistyles';
 
 import type { CurrencyCode } from '@repo/contracts';
 import { money, roundForDisplay } from '@repo/finance';
 
-import { Body, Card, Field, Title } from '@/shared/ui';
+import { useTranslation } from '@/shared/i18n';
+import { AmountText, Button, Card, ErrorState, Field, SectionHeader, Text } from '@/shared/ui';
 
-import { useBuyPreview } from '../model/use-buy-preview';
+import { useBuyPreview, type BuyPreviewForm } from '../model/use-buy-preview';
 
-// TODO(F1): los textos pasan a @repo/i18n (es/en) · TODO(F5): se convierte en la feature real register-trade.
+const FIELDS: readonly (keyof BuyPreviewForm)[] = [
+  'positionQuantity',
+  'positionAverageCost',
+  'buyQuantity',
+  'buyPrice',
+  'buyFee',
+];
+
+// TODO(F5): se convierte en la feature real register-trade.
 export function PreviewBuyForm({ currency }: { currency: CurrencyCode }) {
+  const { t } = useTranslation();
   const { form, outcome, setField, calculate } = useBuyPreview(currency);
 
   return (
-    <Card>
-      <Title>Average cost preview</Title>
-      <Field
-        label="Current quantity"
-        value={form.positionQuantity}
-        onChangeText={(value) => {
-          setField('positionQuantity', value);
-        }}
+    <Card header={<SectionHeader title={t('wiring.preview.title')} />} enterIndex={2}>
+      {FIELDS.map((field) => (
+        <Field
+          key={field}
+          label={t(`wiring.preview.${field}`)}
+          value={form[field]}
+          onChangeText={(value) => {
+            setField(field, value);
+          }}
+        />
+      ))}
+      <Button
+        label={t('wiring.preview.calculate')}
+        icon={Calculator}
+        onPress={calculate}
+        fullWidth
       />
-      <Field
-        label="Current average cost"
-        value={form.positionAverageCost}
-        onChangeText={(value) => {
-          setField('positionAverageCost', value);
-        }}
-      />
-      <Field
-        label="Buy quantity"
-        value={form.buyQuantity}
-        onChangeText={(value) => {
-          setField('buyQuantity', value);
-        }}
-      />
-      <Field
-        label="Buy price"
-        value={form.buyPrice}
-        onChangeText={(value) => {
-          setField('buyPrice', value);
-        }}
-      />
-      <Field
-        label="Fee"
-        value={form.buyFee}
-        onChangeText={(value) => {
-          setField('buyFee', value);
-        }}
-      />
-      <Button title="Calculate" onPress={calculate} />
       {outcome.kind === 'ok' && (
-        <Body testID="buy-preview-result">
-          {`New average cost: ${roundForDisplay(money(outcome.result.averageCost, outcome.result.currency))} ${outcome.result.currency}`}
-        </Body>
+        <View style={styles.result} testID="buy-preview-result">
+          <Text variant="label" tone="muted">
+            {t('wiring.preview.result')}
+          </Text>
+          <AmountText
+            value={roundForDisplay(money(outcome.result.averageCost, outcome.result.currency))}
+            currency={outcome.result.currency}
+            variant="numL"
+            animate
+          />
+        </View>
       )}
-      {outcome.kind === 'error' && <Body testID="buy-preview-error">{outcome.code}</Body>}
+      {outcome.kind === 'error' && (
+        <ErrorState
+          inline
+          title={t('wiring.preview.error')}
+          message={t('wiring.preview.errorCode', { code: outcome.code })}
+          testID="buy-preview-error"
+        />
+      )}
     </Card>
   );
 }
+
+const styles = StyleSheet.create((theme) => ({
+  result: {
+    gap: theme.space[1],
+  },
+}));

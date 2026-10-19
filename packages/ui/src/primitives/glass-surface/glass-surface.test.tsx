@@ -55,7 +55,7 @@ describe('decorative layers (P35, P36)', () => {
       <>
         <HoloSheen testID="sheen" mode="idle" />
         <AuroraBackground testID="aurora" intensity="dimmed" />
-        <AuroraBackground testID="aurora-plain" grid={false} />
+        <AuroraBackground testID="aurora-plain" />
       </>,
     );
     for (const testID of ['sheen', 'aurora', 'aurora-plain']) {
@@ -64,5 +64,14 @@ describe('decorative layers (P35, P36)', () => {
         importantForAccessibility: 'no-hide-descendants',
       });
     }
+  });
+
+  it('keeps the aurora still with reduced motion', async () => {
+    await render(
+      <AccessibilityPreferencesProvider reduceMotion>
+        <AuroraBackground testID="still" />
+      </AccessibilityPreferencesProvider>,
+    );
+    expect(screen.getByTestId('still', { includeHiddenElements: true })).toBeTruthy();
   });
 });

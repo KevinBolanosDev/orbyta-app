@@ -5,8 +5,8 @@
 // Al importarlo se registran los temas en Unistyles (primer import de @repo/ui).
 export * from '@repo/ui';
 
-// Componentes provisionales de F0. TODO(F1.4): reemplazarlos por Card, Button y TextField de @repo/ui.
-export { Body, Card, Field, Screen, Title } from './primitives';
+// Provisionales hasta que existan en @repo/ui: Screen (layout de F2) y Field (TextField de F1.6).
+export { Field, Screen } from './primitives';
 export { ThemeSystemBars } from './theme-system-bars';
 export {
   getThemePreference,
