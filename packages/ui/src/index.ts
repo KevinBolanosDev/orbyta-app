@@ -76,6 +76,7 @@ export {
   formatPercent,
   maskedAmount,
   MINUS,
+  NUMBER_SEPARATORS,
   type AmountCurrency,
   type DeltaDirection,
   type NumberLocale,
@@ -160,6 +161,52 @@ export {
   type ToastProviderProps,
 } from './primitives/toast/toast';
 export { type ToastOptions, type ToastTone } from './primitives/toast/toast-queue';
+
+// Formularios y listas (F1.6).
+export {
+  applyAmountKey,
+  formatAmountInput,
+  MAX_INTEGER_DIGITS,
+  normalizeAmount,
+  parseAmountInput,
+  type AmountKey,
+} from './lib/amount-input';
+export { formatDay, formatRange, toIsoDay, type DayRange, type IsoDay } from './lib/calendar';
+export { matchesQuery, normalizeSearch } from './lib/search';
+export {
+  Checkbox,
+  Radio,
+  RadioGroup,
+  type CheckboxProps,
+  type RadioGroupProps,
+  type RadioProps,
+} from './primitives/choice/choice';
+export {
+  DatePicker,
+  type DatePickerLabels,
+  type DatePickerProps,
+} from './primitives/date-picker/date-picker';
+export { ListItem, type ListItemProps, type SwipeAction } from './primitives/list-item/list-item';
+export { MoneyInput, type MoneyInputProps } from './primitives/money-input/money-input';
+export { NumberPad, type NumberPadProps } from './primitives/number-pad/number-pad';
+export {
+  PullToRefresh,
+  type PullToRefreshProps,
+} from './primitives/pull-to-refresh/pull-to-refresh';
+export {
+  SEARCH_DEBOUNCE_MS,
+  SearchBar,
+  type SearchBarProps,
+} from './primitives/search-bar/search-bar';
+export {
+  Select,
+  type SelectLabels,
+  type SelectOption,
+  type SelectProps,
+} from './primitives/select/select';
+export { Switch, type SwitchProps } from './primitives/switch/switch';
+export { type FieldSize } from './primitives/text-field/field-frame';
+export { TextField, type TextFieldProps } from './primitives/text-field/text-field';
 
 // Primitivas base.
 export {

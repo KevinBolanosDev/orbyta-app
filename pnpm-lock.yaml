@@ -591,6 +591,9 @@ importers:
       '@expo-google-fonts/michroma':
         specifier: 0.4.2
         version: 0.4.2
+      date-fns:
+        specifier: 'catalog:'
+        version: 4.4.0
     devDependencies:
       '@repo/config':
         specifier: workspace:*

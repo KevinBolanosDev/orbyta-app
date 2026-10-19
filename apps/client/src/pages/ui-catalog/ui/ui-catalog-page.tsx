@@ -9,6 +9,7 @@ import { CatalogToolbar, type A11yOverride } from './catalog-toolbar';
 import { BrandSection } from './sections/brand-section';
 import { ColorSection } from './sections/color-section';
 import { ComponentsSection } from './sections/components-section';
+import { FormsSection } from './sections/forms-section';
 import { GlassSection } from './sections/glass-section';
 import { LayoutSection } from './sections/layout-section';
 import { MotionSection } from './sections/motion-section';
@@ -48,6 +49,7 @@ export function UiCatalogPage() {
             <BrandSection />
             <ComponentsSection />
             <OverlaysSection />
+            <FormsSection />
           </View>
         </ScrollView>
       </ToastProvider>

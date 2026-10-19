@@ -15,3 +15,12 @@ export function useLanguage(): readonly [Language, (next: Language) => void] {
   );
   return [language, setLanguage] as const;
 }
+
+/**
+ * Locale de números y fechas del idioma activo: `es-CO` en español y `en-US` en inglés (montos,
+ * MoneyInput y DatePicker de @repo/ui). TODO(F2): región elegida en Ajustes (GLB-12).
+ */
+export function useNumberLocale(): 'es-CO' | 'en-US' {
+  const [language] = useLanguage();
+  return language === 'es' ? 'es-CO' : 'en-US';
+}

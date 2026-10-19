@@ -22,10 +22,12 @@ export const CURRENCY_DECIMALS: Readonly<Record<AmountCurrency, number>> = {
   USD: 2,
 };
 
-const SEPARATORS: Readonly<Record<NumberLocale, { group: string; decimal: string }>> = {
-  'es-CO': { group: '.', decimal: ',' },
-  'en-US': { group: ',', decimal: '.' },
-};
+/** Separadores de miles y de decimales por locale. */
+export const NUMBER_SEPARATORS: Readonly<Record<NumberLocale, { group: string; decimal: string }>> =
+  {
+    'es-CO': { group: '.', decimal: ',' },
+    'en-US': { group: ',', decimal: '.' },
+  };
 
 /** Signo menos tipográfico (U+2212), del mismo ancho que el más en cifras tabulares. */
 export const MINUS = '−';
@@ -56,7 +58,7 @@ function signOf(parsed: ParsedDecimal, display: SignDisplay): string {
 
 /** Número sin signo con separadores del locale y al menos `minDecimals` decimales. */
 function digits(parsed: ParsedDecimal, locale: NumberLocale, minDecimals: number): string {
-  const { group, decimal } = SEPARATORS[locale];
+  const { group, decimal } = NUMBER_SEPARATORS[locale];
   const grouped = parsed.integer.replace(/\B(?=(\d{3})+(?!\d))/g, group);
   const fraction = parsed.fraction.padEnd(minDecimals, '0');
   return fraction === '' ? grouped : `${grouped}${decimal}${fraction}`;

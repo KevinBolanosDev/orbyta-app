@@ -1,4 +1,5 @@
 import { act, fireEvent, render, screen, within } from '@testing-library/react-native';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { UnistylesRuntime } from 'react-native-unistyles';
 
 import { i18n } from '@/shared/i18n';
@@ -14,6 +15,9 @@ jest.mock('react-native-reanimated', () => {
   return { __esModule: true, ...actual, default: actual['default'], useReducedMotion: () => true };
 });
 
+// En la app la raíz de gestos la pone AppProviders; aquí se renderiza la página sola.
+const renderPage = () => render(<UiCatalogPage />, { wrapper: GestureHandlerRootView });
+
 const radioIn = (group: string, option: string) =>
   within(screen.getByLabelText(group)).getByRole('radio', { name: option });
 
@@ -28,7 +32,7 @@ describe('UiCatalogPage', () => {
   });
 
   it('shows every F1 section in Spanish', async () => {
-    await render(<UiCatalogPage />);
+    await renderPage();
     expect(screen.getByRole('header', { name: 'Catálogo de UI' })).toBeOnTheScreen();
     for (const section of [
       'Colores semánticos',
@@ -44,6 +48,7 @@ describe('UiCatalogPage', () => {
       'Marca',
       'Componentes',
       'Superposiciones y navegación',
+      'Formularios y listas',
     ]) {
       expect(screen.getByRole('header', { name: section })).toBeOnTheScreen();
     }
@@ -51,7 +56,7 @@ describe('UiCatalogPage', () => {
   });
 
   it('switches the language in place', async () => {
-    await render(<UiCatalogPage />);
+    await renderPage();
     await fireEvent.press(screen.getByRole('radio', { name: 'English' }));
     expect(await screen.findByRole('header', { name: 'UI catalog' })).toBeOnTheScreen();
     expect(screen.getByRole('radio', { name: 'English' })).toBeChecked();
@@ -59,7 +64,7 @@ describe('UiCatalogPage', () => {
 
   it('applies the chosen theme without leaving the page', async () => {
     const setTheme = jest.spyOn(UnistylesRuntime, 'setTheme');
-    await render(<UiCatalogPage />);
+    await renderPage();
     await fireEvent.press(radioIn('Tema', 'Oscuro'));
     expect(setTheme).toHaveBeenCalledWith('dark');
     expect(radioIn('Tema', 'Oscuro')).toBeChecked();
@@ -68,7 +73,7 @@ describe('UiCatalogPage', () => {
   });
 
   it('forces reduced motion, reduced transparency and the dimmed aurora', async () => {
-    await render(<UiCatalogPage />);
+    await renderPage();
     await fireEvent.press(radioIn('Movimiento', 'Reducido'));
     await fireEvent.press(radioIn('Transparencia', 'Reducida'));
     await fireEvent.press(radioIn('Aurora', 'Atenuada'));
@@ -78,7 +83,7 @@ describe('UiCatalogPage', () => {
   });
 
   it('replays the motion demos', async () => {
-    await render(<UiCatalogPage />);
+    await renderPage();
     await fireEvent.press(screen.getByRole('button', { name: 'Repetir animaciones' }));
     const pressDemo = screen.getByRole('button', { name: 'M02 · Presión (tócame)' });
     await fireEvent.press(pressDemo);
@@ -86,7 +91,7 @@ describe('UiCatalogPage', () => {
   });
 
   it('activates a module icon and replays the brand entrance', async () => {
-    await render(<UiCatalogPage />);
+    await renderPage();
     const stocks = screen.getByRole('button', { name: 'Bolsa' });
     await fireEvent.press(stocks);
     expect(stocks).toBeSelected();
@@ -97,7 +102,7 @@ describe('UiCatalogPage', () => {
   });
 
   it('opens a sheet, confirms the dialog and undoes from the toast', async () => {
-    await render(<UiCatalogPage />);
+    await renderPage();
     await fireEvent.press(screen.getByRole('button', { name: 'Media hoja' }));
     expect(screen.getByRole('header', { name: 'Filtrar movimientos' })).toBeOnTheScreen();
     await fireEvent.press(screen.getByRole('button', { name: 'Aplicar' }));
@@ -116,7 +121,7 @@ describe('UiCatalogPage', () => {
   });
 
   it('moves through the wizard and the period control', async () => {
-    await render(<UiCatalogPage />);
+    await renderPage();
     expect(screen.getByRole('progressbar', { name: 'Paso 1 de 3' })).toBeOnTheScreen();
     await fireEvent.press(screen.getByRole('button', { name: 'Siguiente' }));
     expect(screen.getByRole('progressbar', { name: 'Paso 2 de 3' })).toBeOnTheScreen();
@@ -126,8 +131,21 @@ describe('UiCatalogPage', () => {
     expect(screen.getByText('Contenido de la pestaña «Créditos»')).toBeOnTheScreen();
   });
 
+  it('fills the sample form: amount, category and a switch', async () => {
+    await renderPage();
+    await fireEvent.press(screen.getByRole('button', { name: '5' }));
+    await fireEvent.press(screen.getByRole('button', { name: '000' }));
+    expect(screen.getByLabelText('Monto')).toHaveProp('value', '5.000');
+    await fireEvent.press(screen.getByRole('button', { name: 'Categoría, Elige una categoría' }));
+    await fireEvent.press(screen.getByRole('radio', { name: 'Salud' }));
+    expect(screen.getByRole('button', { name: 'Categoría, Salud' })).toBeOnTheScreen();
+    const privacy = screen.getByRole('switch', { name: 'Modo privado al abrir' });
+    await fireEvent.press(privacy);
+    expect(privacy).toBeChecked();
+  });
+
   it('hides the sample amounts with the privacy toggle', async () => {
-    await render(<UiCatalogPage />);
+    await renderPage();
     expect(screen.getByText('US$ 1.234,56')).toBeOnTheScreen();
     await fireEvent.press(screen.getByRole('button', { name: 'Ocultar montos' }));
     expect(screen.queryByText('US$ 1.234,56')).toBeNull();

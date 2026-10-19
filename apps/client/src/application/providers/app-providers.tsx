@@ -1,5 +1,7 @@
 import * as SplashScreen from 'expo-splash-screen';
-import { useEffect, type ReactNode } from 'react';
+import { Fragment, useEffect, type ReactNode } from 'react';
+import { Platform } from 'react-native';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 import { I18nProvider } from '@/shared/i18n';
@@ -9,6 +11,12 @@ import { useAppReady } from './use-app-ready';
 
 // La splash nativa se queda hasta que fuentes y tema estén listos (en web no hace nada).
 void SplashScreen.preventAutoHideAsync();
+
+/**
+ * Raíz de gesture-handler (deslizar filas, tirar para actualizar, arrastrar hojas). Solo en nativo:
+ * en web no hace falta y su View no aplica los estilos de Unistyles (la app quedaría sin alto).
+ */
+const GestureRoot = Platform.OS === 'web' ? Fragment : GestureHandlerRootView;
 
 /**
  * Providers raíz (capa app de FSD, fuera de src/app porque esa carpeta es de Expo Router — plan §4.2).
@@ -25,11 +33,13 @@ export function AppProviders({ children }: { children: ReactNode }) {
   if (!ready) return null;
 
   return (
-    <SafeAreaProvider>
-      <I18nProvider>
-        <ThemeSystemBars />
-        {children}
-      </I18nProvider>
-    </SafeAreaProvider>
+    <GestureRoot>
+      <SafeAreaProvider>
+        <I18nProvider>
+          <ThemeSystemBars />
+          {children}
+        </I18nProvider>
+      </SafeAreaProvider>
+    </GestureRoot>
   );
 }

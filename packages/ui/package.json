@@ -20,7 +20,8 @@
     "@expo-google-fonts/dm-sans": "0.4.2",
     "@expo-google-fonts/exo-2": "0.4.2",
     "@expo-google-fonts/jetbrains-mono": "0.4.1",
-    "@expo-google-fonts/michroma": "0.4.2"
+    "@expo-google-fonts/michroma": "0.4.2",
+    "date-fns": "catalog:"
   },
   "peerDependencies": {
     "expo-blur": "*",

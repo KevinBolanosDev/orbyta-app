@@ -5,4 +5,4 @@ export { DEFAULT_LANGUAGE, SUPPORTED_LANGUAGES, type Language } from '@repo/i18n
 export { useTranslation } from 'react-i18next';
 export { i18n } from './i18n';
 export { I18nProvider } from './i18n-provider';
-export { useLanguage } from './use-language';
+export { useLanguage, useNumberLocale } from './use-language';
