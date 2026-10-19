@@ -116,6 +116,14 @@ export function monthTitle(cursor: MonthCursor, locale: NumberLocale): string {
   return text.charAt(0).toUpperCase() + text.slice(1);
 }
 
+/** Mes abreviado para ejes y barras: "oct" / "Oct". */
+export function monthShort(cursor: MonthCursor, locale: NumberLocale): string {
+  return format(new Date(cursor.year, cursor.month, 1), 'LLL', { locale: LOCALES[locale] }).replace(
+    '.',
+    '',
+  );
+}
+
 /** Fecha corta para mostrar en el campo: "19 oct 2026" / "Oct 19, 2026". */
 export function formatDay(iso: IsoDay, locale: NumberLocale): string {
   const pattern = locale === 'es-CO' ? 'd MMM yyyy' : 'MMM d, yyyy';

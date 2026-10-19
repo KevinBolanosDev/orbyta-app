@@ -171,7 +171,17 @@ export {
   parseAmountInput,
   type AmountKey,
 } from './lib/amount-input';
-export { formatDay, formatRange, toIsoDay, type DayRange, type IsoDay } from './lib/calendar';
+export {
+  addDaysIso,
+  formatDay,
+  formatRange,
+  monthShort,
+  shiftMonth,
+  toIsoDay,
+  type DayRange,
+  type IsoDay,
+  type MonthCursor,
+} from './lib/calendar';
 export { matchesQuery, normalizeSearch } from './lib/search';
 export {
   Checkbox,
@@ -207,6 +217,24 @@ export {
 export { Switch, type SwitchProps } from './primitives/switch/switch';
 export { type FieldSize } from './primitives/text-field/field-frame';
 export { TextField, type TextFieldProps } from './primitives/text-field/text-field';
+
+// Gráficos G01–G07 y StatTile (F1.7): geometría pura sobre d3 y dibujo en SVG (ADR 0014).
+export {
+  AreaChart,
+  type AreaChartProps,
+  type ChartMarker,
+  type ChartPoint,
+} from './charts/area-chart';
+export { BarChart, type BarChartProps, type BarDatum } from './charts/bar-chart';
+export { CandleChart, type CandleChartProps } from './charts/candle-chart';
+export { type ChartTone } from './charts/chart-kit';
+export { DonutChart, type DonutChartProps, type DonutDatum } from './charts/donut-chart';
+export { trendOf } from './charts/geometry/line';
+export { type Candle } from './charts/geometry/shapes';
+export { HeatmapCalendar, type HeatmapCalendarProps } from './charts/heatmap-calendar';
+export { Sparkline, type SparklineProps } from './charts/sparkline';
+export { useScrubber } from './charts/use-scrubber';
+export { StatTile, type StatTileProps } from './primitives/stat-tile/stat-tile';
 
 // Primitivas base.
 export {

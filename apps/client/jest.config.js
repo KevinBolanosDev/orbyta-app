@@ -4,7 +4,7 @@ module.exports = {
   // Variante pnpm de https://docs.expo.dev/develop/unit-testing/ más standard-navigation
   // (dependencia ESM de expo-router 58 que la doc aún no lista) y uuid (solo ESM).
   transformIgnorePatterns: [
-    'node_modules/(?!(.pnpm|(jest-)?react-native|@react-native(-community)?|expo(nent)?|@expo(nent)?/.*|@expo-google-fonts/.*|react-navigation|@react-navigation/.*|@sentry/react-native|native-base|react-native-svg|standard-navigation|uuid))',
+    'node_modules/(?!(.pnpm|(jest-)?react-native|@react-native(-community)?|expo(nent)?|@expo(nent)?/.*|@expo-google-fonts/.*|react-navigation|@react-navigation/.*|@sentry/react-native|native-base|react-native-svg|standard-navigation|d3-[a-z-]+|internmap|uuid))',
   ],
   moduleNameMapper: {
     '^@/(.*)$': '<rootDir>/src/$1',

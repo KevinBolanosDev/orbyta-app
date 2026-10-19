@@ -49,6 +49,7 @@ describe('UiCatalogPage', () => {
       'Componentes',
       'Superposiciones y navegación',
       'Formularios y listas',
+      'Gráficos',
     ]) {
       expect(screen.getByRole('header', { name: section })).toBeOnTheScreen();
     }

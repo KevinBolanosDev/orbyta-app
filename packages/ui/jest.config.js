@@ -4,7 +4,7 @@ module.exports = {
   // Igual que en apps/client: pnpm guarda todo en node_modules/.pnpm y hay que transformar los
   // paquetes de React Native, Expo, Unistyles y las fuentes (ADR 0008, ADR 0019).
   transformIgnorePatterns: [
-    'node_modules/(?!(.pnpm|(jest-)?react-native|@react-native(-community)?|expo(nent)?|@expo(nent)?/.*|@expo-google-fonts/.*|react-native-svg|standard-navigation))',
+    'node_modules/(?!(.pnpm|(jest-)?react-native|@react-native(-community)?|expo(nent)?|@expo(nent)?/.*|@expo-google-fonts/.*|react-native-svg|standard-navigation|d3-[a-z-]+|internmap))',
   ],
   // gesture-handler: sus mocks oficiales (en Jest no hay módulo nativo) para la hoja inferior.
   setupFiles: ['react-native-gesture-handler/jestSetup', '<rootDir>/jest.setup.ts'],

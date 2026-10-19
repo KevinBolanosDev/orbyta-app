@@ -21,6 +21,8 @@
     "@expo-google-fonts/exo-2": "0.4.2",
     "@expo-google-fonts/jetbrains-mono": "0.4.1",
     "@expo-google-fonts/michroma": "0.4.2",
+    "d3-scale": "4.0.2",
+    "d3-shape": "3.2.0",
     "date-fns": "catalog:"
   },
   "peerDependencies": {
@@ -39,6 +41,8 @@
     "@repo/config": "workspace:*",
     "@resvg/resvg-js": "2.6.2",
     "@testing-library/react-native": "14.1.0",
+    "@types/d3-scale": "4.0.9",
+    "@types/d3-shape": "3.2.0",
     "@types/jest": "30.0.0",
     "@types/node": "24.19.2",
     "@types/react": "19.3.0",

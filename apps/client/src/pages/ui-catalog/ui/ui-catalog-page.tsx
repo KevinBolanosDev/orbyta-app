@@ -7,6 +7,7 @@ import { AccessibilityPreferencesProvider, ToastProvider } from '@/shared/ui';
 
 import { CatalogToolbar, type A11yOverride } from './catalog-toolbar';
 import { BrandSection } from './sections/brand-section';
+import { ChartsSection } from './sections/charts-section';
 import { ColorSection } from './sections/color-section';
 import { ComponentsSection } from './sections/components-section';
 import { FormsSection } from './sections/forms-section';
@@ -50,6 +51,7 @@ export function UiCatalogPage() {
             <ComponentsSection />
             <OverlaysSection />
             <FormsSection />
+            <ChartsSection />
           </View>
         </ScrollView>
       </ToastProvider>

@@ -18,6 +18,7 @@ import {
   lastDayOf,
   lastDays,
   monthGrid,
+  monthShort,
   monthTitle,
   monthToDate,
   orderRange,
@@ -123,6 +124,8 @@ describe('calendar', () => {
   it('formats days, months and ranges per language', () => {
     expect(monthTitle({ year: 2026, month: 9 }, 'es-CO')).toBe('Octubre 2026');
     expect(monthTitle({ year: 2026, month: 9 }, 'en-US')).toBe('October 2026');
+    expect(monthShort({ year: 2026, month: 8 }, 'es-CO')).toBe('sep');
+    expect(monthShort({ year: 2026, month: 9 }, 'en-US')).toBe('Oct');
     expect(formatDay('2026-10-19', 'es-CO')).toBe('19 oct 2026');
     expect(formatDay('2026-10-19', 'en-US')).toBe('Oct 19, 2026');
     expect(formatDayLong('2026-10-19', 'es-CO')).toBe('19 de octubre de 2026');

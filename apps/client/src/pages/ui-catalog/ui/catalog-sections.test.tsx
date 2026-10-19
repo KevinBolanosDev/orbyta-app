@@ -167,3 +167,17 @@ describe('UiCatalogPage · forms and lists (F1.6)', () => {
     expect(screen.getByText('Lista actualizada.')).toBeOnTheScreen();
   });
 });
+
+describe('UiCatalogPage · charts (F1.7)', () => {
+  it('switches the area range and selects a donut segment', async () => {
+    await renderPage();
+    await fireEvent.press(
+      within(screen.getByLabelText('Rango')).getByRole('radio', { name: '1A' }),
+    );
+    expect(within(screen.getByLabelText('Rango')).getByRole('radio', { name: '1A' })).toBeChecked();
+    const donut = screen.getByRole('adjustable', { name: 'Gasto por categoría' });
+    await fireEvent(donut, 'accessibilityAction', { nativeEvent: { actionName: 'increment' } });
+    expect(donut).toHaveAccessibilityValue({ text: 'Comida, 42 %' });
+    expect(screen.getByRole('image', { name: /^Hábito «Leer»: \d+ días/ })).toBeOnTheScreen();
+  });
+});
