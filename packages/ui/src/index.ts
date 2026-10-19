@@ -39,9 +39,11 @@ export { useCountUp, type CountUpOptions } from './motion/use-count-up';
 export { useDrawProgress, type DrawOptions } from './motion/use-draw-progress';
 export { useEnter, type EnterOptions } from './motion/use-enter';
 export { useOrbDrift } from './motion/use-orb-drift';
+export { usePresence, type PresenceOptions } from './motion/use-presence';
 export { usePress, type PressOptions } from './motion/use-press';
 export { useProgressFill } from './motion/use-progress-fill';
 export { useSheen, type SheenMode, type SheenOptions } from './motion/use-sheen';
+export { useSlideIndicator, type SlotLayout } from './motion/use-slide-indicator';
 
 // Marca Gravyx Ascenda (F1.3, §11): órbita pura y componentes BR01–BR04.
 export { ENTRANCE_DURATION, entranceAt, twinkleScale, type EntranceState } from './brand/entrance';
@@ -119,6 +121,45 @@ export {
 } from './primitives/icon-button/icon-button';
 export { SectionHeader, type SectionHeaderProps } from './primitives/section-header/section-header';
 export { Skeleton, type SkeletonProps, type SkeletonShape } from './primitives/skeleton/skeleton';
+
+// Superposiciones, progreso y navegación interna (F1.5).
+export { BottomSheet, type BottomSheetProps } from './primitives/bottom-sheet/bottom-sheet';
+export { type SheetHeight } from './primitives/bottom-sheet/sheet-math';
+export { Dialog, type DialogProps } from './primitives/dialog/dialog';
+export { Fab, type FabProps } from './primitives/fab/fab';
+export {
+  ProgressBar,
+  ProgressRing,
+  type ProgressBarProps,
+  type ProgressRingProps,
+  type ProgressToneProp,
+} from './primitives/progress/progress';
+export {
+  budgetTone,
+  PROGRESS_LIMIT_RATIO,
+  type ProgressTone,
+} from './primitives/progress/progress-math';
+export {
+  SegmentedControl,
+  type SegmentedControlProps,
+  type SegmentOption,
+} from './primitives/segmented-control/segmented-control';
+export { Stepper, type StepperProps } from './primitives/stepper/stepper';
+export {
+  OfflineBanner,
+  SyncBadge,
+  type OfflineBannerProps,
+  type SyncBadgeProps,
+  type SyncStatus,
+} from './primitives/sync-status/sync-status';
+export { Tabs, type TabItem, type TabsProps } from './primitives/tabs/tabs';
+export {
+  ToastProvider,
+  useToast,
+  type ToastApi,
+  type ToastProviderProps,
+} from './primitives/toast/toast';
+export { type ToastOptions, type ToastTone } from './primitives/toast/toast-queue';
 
 // Primitivas base.
 export {

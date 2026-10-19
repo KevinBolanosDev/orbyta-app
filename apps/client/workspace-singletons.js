@@ -2,6 +2,10 @@
 // pnpm puede instalar dos copias de react-native, Unistyles, Reanimated… (una para el cliente y otra
 // para las devDependencies de @repo/ui) y esos módulos solo funcionan con una instancia. Cuando un
 // archivo de packages/ importa una dependencia del cliente, se resuelve desde apps/client.
+// Además, los módulos con un runtime global (worklets, Reanimated, gesture-handler, Unistyles,
+// Nitro) se resuelven desde apps/client también cuando los pide otra dependencia: pnpm no le da a
+// gesture-handler su propio react-native-worklets y Node lo encontraba en la carpeta compartida de
+// .pnpm, que es otra copia (dos runtimes de worklets: los gestos de la hoja inferior fallaban).
 // Lo usan: metro.config.js y jest.resolver.js.
 const path = require('node:path');
 
@@ -20,6 +24,15 @@ const appDependencies = new Set(
   Object.keys(dependencies).filter((name) => !name.startsWith('@repo/')),
 );
 
+/** Siempre una sola instancia, la del cliente, venga de donde venga el import. */
+const RUNTIME_SINGLETONS = new Set([
+  'react-native-gesture-handler',
+  'react-native-nitro-modules',
+  'react-native-reanimated',
+  'react-native-unistyles',
+  'react-native-worklets',
+]);
+
 /** `react-native/Libraries/x` → `react-native`; `@scope/pkg/sub` → `@scope/pkg`. */
 function packageNameOf(request) {
   const parts = request.split('/');
@@ -29,10 +42,9 @@ function packageNameOf(request) {
 /** ¿Este import debe resolverse desde apps/client en lugar de desde el archivo que lo pide? */
 function shouldResolveFromApp(originPath, request) {
   if (request.startsWith('.') || path.isAbsolute(request)) return false;
-  return (
-    normalize(originPath).startsWith(workspacePackagesDir) &&
-    appDependencies.has(packageNameOf(request))
-  );
+  const name = packageNameOf(request);
+  if (!appDependencies.has(name)) return false;
+  return RUNTIME_SINGLETONS.has(name) || normalize(originPath).startsWith(workspacePackagesDir);
 }
 
-module.exports = { projectRoot, shouldResolveFromApp };
+module.exports = { projectRoot, RUNTIME_SINGLETONS, shouldResolveFromApp };

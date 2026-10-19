@@ -77,5 +77,25 @@ export const iconSize = {
 
 export const ICON_STROKE_WIDTH = 2;
 
+/** Medidas fijas de los controles y superposiciones de F1.5 (§7.1). */
+export const componentSize = {
+  /** P32 · FAB. */
+  fab: 56,
+  /** P18 · Alto de la barra: fina (tarjetas héroe, arranque) o normal. */
+  progressBar: { thin: 4, regular: 8 },
+  /** P19 · Anillo por defecto. */
+  progressRing: { size: 96, strokeWidth: 8 },
+  /** P34 · Círculo de cada paso. */
+  stepDot: 28,
+  /** P31 · Grosor del subrayado que se desliza. */
+  tabIndicator: 3,
+  /** P24 · Asa de arrastre. */
+  sheetGrabber: { width: 40, height: 5 },
+  /** P25, y P24 en `expanded`: ancho máximo del diálogo centrado. */
+  dialogMaxWidth: 560,
+  /** P23 · Ancho máximo del toast fuera de `compact`. */
+  toastMaxWidth: 400,
+} as const;
+
 /** Por debajo de este tamaño un módulo se pinta con su glifo y no con su ícono de marca (§11.5). */
 export const MODULE_ICON_MIN_SIZE = 22;

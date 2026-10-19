@@ -2,7 +2,8 @@ import { useState } from 'react';
 import { ScrollView, View } from 'react-native';
 import { StyleSheet } from 'react-native-unistyles';
 
-import { AccessibilityPreferencesProvider } from '@/shared/ui';
+import { useTranslation } from '@/shared/i18n';
+import { AccessibilityPreferencesProvider, ToastProvider } from '@/shared/ui';
 
 import { CatalogToolbar, type A11yOverride } from './catalog-toolbar';
 import { BrandSection } from './sections/brand-section';
@@ -11,14 +12,17 @@ import { ComponentsSection } from './sections/components-section';
 import { GlassSection } from './sections/glass-section';
 import { LayoutSection } from './sections/layout-section';
 import { MotionSection } from './sections/motion-section';
+import { OverlaysSection } from './sections/overlays-section';
 import { TypographySection } from './sections/typography-section';
 
 /**
  * Catálogo visual del design system (ADR 0018). Muestra todo en el tema, idioma y preferencias de
  * accesibilidad elegidos en la barra. Cada sub-fase de F1 suma aquí su sección.
  * "Reducir movimiento/transparencia" solo se fuerza dentro del catálogo; en la app llegará con Ajustes.
+ * Monta su propio ToastProvider. TODO(F2): pasa a la raíz de la app y este se quita.
  */
 export function UiCatalogPage() {
+  const { t } = useTranslation();
   const [motion, setMotion] = useState<A11yOverride>('system');
   const [transparency, setTransparency] = useState<A11yOverride>('system');
 
@@ -27,23 +31,26 @@ export function UiCatalogPage() {
       reduceMotion={motion === 'reduced' ? true : undefined}
       reduceTransparency={transparency === 'reduced' ? true : undefined}
     >
-      <ScrollView style={styles.screen} contentContainerStyle={styles.content}>
-        <View style={styles.column}>
-          <CatalogToolbar
-            motion={motion}
-            onMotionChange={setMotion}
-            transparency={transparency}
-            onTransparencyChange={setTransparency}
-          />
-          <ColorSection />
-          <TypographySection />
-          <LayoutSection />
-          <GlassSection />
-          <MotionSection />
-          <BrandSection />
-          <ComponentsSection />
-        </View>
-      </ScrollView>
+      <ToastProvider dismissLabel={t('common.dismiss')}>
+        <ScrollView style={styles.screen} contentContainerStyle={styles.content}>
+          <View style={styles.column}>
+            <CatalogToolbar
+              motion={motion}
+              onMotionChange={setMotion}
+              transparency={transparency}
+              onTransparencyChange={setTransparency}
+            />
+            <ColorSection />
+            <TypographySection />
+            <LayoutSection />
+            <GlassSection />
+            <MotionSection />
+            <BrandSection />
+            <ComponentsSection />
+            <OverlaysSection />
+          </View>
+        </ScrollView>
+      </ToastProvider>
     </AccessibilityPreferencesProvider>
   );
 }

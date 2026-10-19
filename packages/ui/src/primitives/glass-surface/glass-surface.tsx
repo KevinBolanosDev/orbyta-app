@@ -1,10 +1,12 @@
 import { BlurView, type BlurViewProps } from 'expo-blur';
 import { StyleSheet as NativeStyleSheet, Platform, View, type ViewProps } from 'react-native';
+import Animated, { useAnimatedStyle, type SharedValue } from 'react-native-reanimated';
 import { StyleSheet, useUnistyles } from 'react-native-unistyles';
 
 import { fillParent } from '../../lib/fill-parent';
 import { cssBackdropFilter, glassRendering, nativeBlurIntensity } from '../../lib/glass';
 import { useReduceTransparency } from '../../motion/accessibility-preferences';
+import { settledOpacity } from '../../motion/motion-math';
 import type { SheenMode } from '../../motion/use-sheen';
 import { radius, type GlassLevel } from '../../tokens';
 import { HoloSheen } from '../holo-sheen/holo-sheen';
@@ -25,6 +27,17 @@ export interface GlassSurfaceProps extends ViewProps {
    * desenfoque y queda el relleno translúcido. En iOS y web no hace falta.
    */
   blurTarget?: BlurViewProps['blurTarget'];
+  /**
+   * Radio en las cuatro esquinas, en lugar de la forma del nivel. Lo usan el diálogo centrado
+   * (`sheet` con 28) y el toast (22).
+   */
+  cornerRadius?: number;
+  /**
+   * Entrada con fundido (0–1) de diálogos y toasts: se aplica solo al relleno. Quien la usa desvanece
+   * su contenido aparte y no anima la opacidad de un contenedor: en web, un ancestro con opacidad
+   * animada deja a Chrome sin desenfocar el fondo aunque vuelva a 1.
+   */
+  fade?: SharedValue<number>;
 }
 
 /**
@@ -39,6 +52,8 @@ export function GlassSurface({
   holo = false,
   holoTrigger,
   blurTarget,
+  cornerRadius,
+  fade,
   style,
   children,
   ...rest
@@ -53,7 +68,7 @@ export function GlassSurface({
   });
 
   return (
-    <View style={[styles.surface(level), style]} {...rest}>
+    <View style={[styles.surface(level, cornerRadius), style]} {...rest}>
       {rendering === 'native-blur' ? (
         <BlurView
           style={NativeStyleSheet.absoluteFill}
@@ -63,7 +78,14 @@ export function GlassSurface({
           blurTarget={blurTarget}
         />
       ) : null}
-      <View pointerEvents="none" style={styles.fill(level, rendering === 'solid')} />
+      {fade ? (
+        <FadingFill fade={fade} style={styles.fill(level, rendering === 'solid', cornerRadius)} />
+      ) : (
+        <View
+          pointerEvents="none"
+          style={styles.fill(level, rendering === 'solid', cornerRadius)}
+        />
+      )}
       {children}
       {hud ? <HudCorners /> : null}
       {holo ? <HoloSheen mode={holo} trigger={holoTrigger} /> : null}
@@ -71,8 +93,14 @@ export function GlassSurface({
   );
 }
 
+function FadingFill({ fade, style }: { fade: SharedValue<number>; style: ViewProps['style'] }) {
+  const fadeStyle = useAnimatedStyle(() => ({ opacity: settledOpacity(fade.get()) }));
+  return <Animated.View pointerEvents="none" style={[style, fadeStyle]} />;
+}
+
 // Forma por nivel: las hojas solo redondean arriba. Chrome usa 28 y puede pasar a pill con `style`.
-function shape(level: GlassLevel) {
+function shape(level: GlassLevel, cornerRadius: number | undefined) {
+  if (cornerRadius !== undefined) return { borderRadius: cornerRadius };
   return level === 'sheet'
     ? { borderTopLeftRadius: radius.sheet, borderTopRightRadius: radius.sheet }
     : { borderRadius: radius.xl };
@@ -80,15 +108,15 @@ function shape(level: GlassLevel) {
 
 const styles = StyleSheet.create((theme) => ({
   // Contenedor: recorta las capas a la forma y lleva la sombra exterior.
-  surface: (level: GlassLevel) => ({
-    ...shape(level),
+  surface: (level: GlassLevel, cornerRadius: number | undefined) => ({
+    ...shape(level, cornerRadius),
     overflow: 'hidden',
     boxShadow: theme.elevation.e2,
   }),
   // Relleno, borde y brillo interior; en web, también el desenfoque del fondo.
-  fill: (level: GlassLevel, solid: boolean) => ({
+  fill: (level: GlassLevel, solid: boolean, cornerRadius: number | undefined) => ({
     ...fillParent,
-    ...shape(level),
+    ...shape(level, cornerRadius),
     borderWidth: 1,
     borderColor: theme.glass[level].border,
     backgroundColor: solid ? theme.glass.solidFallback : theme.glass[level].fill,

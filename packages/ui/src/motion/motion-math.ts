@@ -15,6 +15,16 @@ export function clampProgress(value: number): number {
 }
 
 /**
+ * Opacidad de una entrada que anima la de un contenedor con vidrio: llega a 1 exacto al final. En
+ * web, un ancestro con opacidad < 1 apaga el `backdrop-filter`, y el rebote del resorte la dejaría en
+ * 0,999… un buen rato (el vidrio se vería transparente).
+ */
+export function settledOpacity(progress: number): number {
+  'worklet';
+  return progress >= 0.99 ? 1 : Math.max(progress, 0);
+}
+
+/**
  * M08: `translateX` de la franja del reflejo para un progreso de 0 a 1. El centro de la franja va
  * de −40 % a 140 % del ancho; con 0,5 queda centrada (la posición estática).
  */

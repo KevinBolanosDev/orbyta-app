@@ -91,6 +91,11 @@ export const timing = {
   orbDrift: 8000,
   /** M13 skeleton. */
   skeleton: 1200,
+  /** P23 tiempo en pantalla de un toast, y de uno con acción (deshacer) que da más margen. */
+  toast: 4000,
+  toastWithAction: 6000,
+  /** P37 una vuelta del ícono "sincronizando". */
+  syncSpin: 1000,
   /** M17 destello de precio. */
   priceFlash: 600,
   /** X07 "+XP" flotante. */

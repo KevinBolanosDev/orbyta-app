@@ -43,6 +43,7 @@ describe('UiCatalogPage', () => {
       'Movimiento',
       'Marca',
       'Componentes',
+      'Superposiciones y navegación',
     ]) {
       expect(screen.getByRole('header', { name: section })).toBeOnTheScreen();
     }
@@ -93,6 +94,36 @@ describe('UiCatalogPage', () => {
     expect(stocks).not.toBeSelected();
     await fireEvent.press(screen.getByRole('button', { name: 'Repetir entrada' }));
     expect(screen.getAllByRole('image', { name: 'Gravyx Ascenda' }).length).toBeGreaterThan(0);
+  });
+
+  it('opens a sheet, confirms the dialog and undoes from the toast', async () => {
+    await render(<UiCatalogPage />);
+    await fireEvent.press(screen.getByRole('button', { name: 'Media hoja' }));
+    expect(screen.getByRole('header', { name: 'Filtrar movimientos' })).toBeOnTheScreen();
+    await fireEvent.press(screen.getByRole('button', { name: 'Aplicar' }));
+
+    await fireEvent.press(screen.getByRole('button', { name: 'Diálogo destructivo' }));
+    await fireEvent.press(
+      within(screen.getByLabelText('¿Eliminar el gasto?')).getByRole('button', {
+        name: 'Eliminar',
+      }),
+    );
+    expect(await screen.findByText('Gasto eliminado.')).toBeOnTheScreen();
+    // El último "Deshacer" es la acción del toast (el primero es el botón de la sección).
+    const undo = screen.getAllByRole('button', { name: 'Deshacer' }).at(-1);
+    if (undo) await fireEvent.press(undo);
+    expect(await screen.findByText('Se restauró el gasto.')).toBeOnTheScreen();
+  });
+
+  it('moves through the wizard and the period control', async () => {
+    await render(<UiCatalogPage />);
+    expect(screen.getByRole('progressbar', { name: 'Paso 1 de 3' })).toBeOnTheScreen();
+    await fireEvent.press(screen.getByRole('button', { name: 'Siguiente' }));
+    expect(screen.getByRole('progressbar', { name: 'Paso 2 de 3' })).toBeOnTheScreen();
+    await fireEvent.press(radioIn('Período', 'Año'));
+    expect(radioIn('Período', 'Año')).toBeChecked();
+    await fireEvent.press(screen.getByRole('tab', { name: 'Créditos' }));
+    expect(screen.getByText('Contenido de la pestaña «Créditos»')).toBeOnTheScreen();
   });
 
   it('hides the sample amounts with the privacy toggle', async () => {

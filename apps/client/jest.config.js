@@ -14,8 +14,9 @@ module.exports = {
   },
   // Copia única de módulos nativos + resolvers de Reanimated y React Native (ADR 0019).
   resolver: '<rootDir>/jest.resolver.js',
-  // Mocks de Unistyles y AsyncStorage (no existen módulos nativos en Jest).
-  setupFiles: ['<rootDir>/jest.setup.ts'],
+  // Mocks de gesture-handler (hoja inferior de @repo/ui), Unistyles y AsyncStorage (no existen
+  // módulos nativos en Jest).
+  setupFiles: ['react-native-gesture-handler/jestSetup', '<rootDir>/jest.setup.ts'],
   // En frío, la transformación de Babel en Windows/CI puede pasar los 5 s por defecto de Jest.
   testTimeout: 30_000,
   testMatch: ['<rootDir>/src/**/*.test.{ts,tsx}', '<rootDir>/__tests__/**/*.test.{ts,tsx}'],

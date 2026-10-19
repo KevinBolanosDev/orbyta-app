@@ -12,6 +12,7 @@ export {
 } from './color';
 export {
   breakpoints,
+  componentSize,
   ICON_STROKE_WIDTH,
   iconSize,
   layout,

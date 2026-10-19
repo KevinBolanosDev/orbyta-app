@@ -6,7 +6,8 @@ module.exports = {
   transformIgnorePatterns: [
     'node_modules/(?!(.pnpm|(jest-)?react-native|@react-native(-community)?|expo(nent)?|@expo(nent)?/.*|@expo-google-fonts/.*|react-native-svg|standard-navigation))',
   ],
-  setupFiles: ['<rootDir>/jest.setup.ts'],
+  // gesture-handler: sus mocks oficiales (en Jest no hay módulo nativo) para la hoja inferior.
+  setupFiles: ['react-native-gesture-handler/jestSetup', '<rootDir>/jest.setup.ts'],
   // Lucide publica sus íconos en ESM (.mjs) para React Native; en Jest se usa su versión CommonJS.
   moduleNameMapper: {
     '^lucide-react-native/icons/(.*)$':

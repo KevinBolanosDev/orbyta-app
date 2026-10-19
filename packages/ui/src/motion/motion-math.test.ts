@@ -1,6 +1,12 @@
 import { distance, glassGeometry, MAX_STAGGERED_ROWS, stagger } from '../tokens';
 
-import { clampProgress, orbDriftTarget, sheenTranslateX, staggerDelay } from './motion-math';
+import {
+  clampProgress,
+  orbDriftTarget,
+  settledOpacity,
+  sheenTranslateX,
+  staggerDelay,
+} from './motion-math';
 
 describe('staggerDelay', () => {
   it('uses the screen step by default', () => {
@@ -16,6 +22,15 @@ describe('staggerDelay', () => {
 
   it('treats negative indexes as the first row', () => {
     expect(staggerDelay(-3)).toBe(0);
+  });
+});
+
+describe('settledOpacity', () => {
+  it('reaches exactly 1 near the end so the glass blur stays on', () => {
+    expect(settledOpacity(0.5)).toBe(0.5);
+    expect(settledOpacity(0.995)).toBe(1);
+    expect(settledOpacity(1.02)).toBe(1);
+    expect(settledOpacity(-0.1)).toBe(0);
   });
 });
 
