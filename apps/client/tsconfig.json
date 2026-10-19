@@ -2,6 +2,8 @@
   "extends": ["./node_modules/expo/tsconfig.base.json", "@repo/config/tsconfig/strict.json"],
   "compilerOptions": {
     "types": ["jest"],
+    // El cliente también compila el código de @repo/ui, cuyo núcleo de brand/ importa con `.ts`.
+    "allowImportingTsExtensions": true,
     "paths": {
       "@/*": ["./src/*"]
     }

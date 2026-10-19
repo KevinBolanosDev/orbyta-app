@@ -43,6 +43,28 @@ export { usePress, type PressOptions } from './motion/use-press';
 export { useProgressFill } from './motion/use-progress-fill';
 export { useSheen, type SheenMode, type SheenOptions } from './motion/use-sheen';
 
+// Marca Gravyx Ascenda (F1.3, §11): órbita pura y componentes BR01–BR04.
+export { ENTRANCE_DURATION, entranceAt, twinkleScale, type EntranceState } from './brand/entrance';
+export { BRAND_BACKGROUND, MARK_VARIANT_MIN_SIZE } from './brand/geometry';
+export { brandVariantForSize, type BrandMarkVariant } from './brand/mark';
+export { type ModuleIconTone } from './brand/module-icon';
+export {
+  ORBIT,
+  orbitFrame,
+  orbitPhase,
+  projectPoint,
+  type OrbitFrame,
+  type OrbitSlot,
+} from './brand/orbit';
+export { BrandMark, type BrandMarkProps } from './brand/ui/brand-mark';
+export { ModuleIcon, type ModuleIconProps, type ModuleIconState } from './brand/ui/module-icon';
+export {
+  BrandLockup,
+  Wordmark,
+  type BrandLockupProps,
+  type WordmarkProps,
+} from './brand/ui/wordmark';
+
 // Primitivas.
 export {
   AuroraBackground,

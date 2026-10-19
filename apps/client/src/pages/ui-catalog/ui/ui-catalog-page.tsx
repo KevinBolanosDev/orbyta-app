@@ -5,6 +5,7 @@ import { StyleSheet } from 'react-native-unistyles';
 import { AccessibilityPreferencesProvider } from '@/shared/ui';
 
 import { CatalogToolbar, type A11yOverride } from './catalog-toolbar';
+import { BrandSection } from './sections/brand-section';
 import { ColorSection } from './sections/color-section';
 import { GlassSection } from './sections/glass-section';
 import { LayoutSection } from './sections/layout-section';
@@ -38,6 +39,7 @@ export function UiCatalogPage() {
           <LayoutSection />
           <GlassSection />
           <MotionSection />
+          <BrandSection />
         </View>
       </ScrollView>
     </AccessibilityPreferencesProvider>

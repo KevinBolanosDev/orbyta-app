@@ -41,6 +41,7 @@ export const es = {
       elevation: 'Elevación',
       glass: 'Vidrio y aurora',
       motion: 'Movimiento',
+      brand: 'Marca',
     },
     controls: {
       motion: {
@@ -64,6 +65,17 @@ export const es = {
       chrome: 'glass.chrome · encabezado y barra',
       card: 'glass.card · tarjeta héroe con HUD y reflejo',
       sheet: 'glass.sheet · hojas y diálogos',
+    },
+    brand: {
+      animated: 'BR01 · Logo animado: entrada (M21), órbita (M20) y destello (M23)',
+      replay: 'Repetir entrada',
+      variants: 'Variantes por tamaño',
+      icons: 'Con íconos',
+      dots: 'Con puntos',
+      mono: 'Monocromo',
+      modules: 'BR02 · Íconos de módulo (toca uno para activarlo, M22)',
+      moduleSizes: 'Monocromo a 32 px y, debajo de 22 px, solo el glifo',
+      wordmark: 'BR03 · Wordmark y BR04 · Logotipo horizontal',
     },
     motion: {
       enter: 'M01 · Entrada',

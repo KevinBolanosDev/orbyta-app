@@ -42,6 +42,7 @@ export const en: TranslationResource = {
       elevation: 'Elevation',
       glass: 'Glass and aurora',
       motion: 'Motion',
+      brand: 'Brand',
     },
     controls: {
       motion: {
@@ -65,6 +66,17 @@ export const en: TranslationResource = {
       chrome: 'glass.chrome · header and bars',
       card: 'glass.card · hero card with HUD and sheen',
       sheet: 'glass.sheet · sheets and dialogs',
+    },
+    brand: {
+      animated: 'BR01 · Animated mark: entrance (M21), orbit (M20) and sparkle (M23)',
+      replay: 'Replay entrance',
+      variants: 'Variants by size',
+      icons: 'With icons',
+      dots: 'With dots',
+      mono: 'Monochrome',
+      modules: 'BR02 · Module icons (tap one to activate it, M22)',
+      moduleSizes: 'Monochrome at 32 px and, below 22 px, the glyph only',
+      wordmark: 'BR03 · Wordmark and BR04 · Horizontal lockup',
     },
     motion: {
       enter: 'M01 · Enter',

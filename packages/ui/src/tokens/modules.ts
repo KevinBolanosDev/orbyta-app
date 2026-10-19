@@ -1,4 +1,4 @@
-import { categoryColors, type ColorScheme } from './color';
+import { categoryColors, type ColorScheme } from './color.ts';
 
 // Identidad de los cinco módulos: ids y colores (design-system.md §11.5 y §11.6).
 // El color de módulo es identidad, no acción: botones primarios, foco y XP siguen en `primary`.

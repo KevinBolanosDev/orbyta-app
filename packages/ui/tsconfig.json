@@ -1,8 +1,11 @@
 {
   "extends": ["./node_modules/expo/tsconfig.base.json", "@repo/config/tsconfig/strict.json"],
   "compilerOptions": {
-    "types": ["jest"]
+    "types": ["jest"],
+    // El núcleo de src/brand importa con `.ts` para que Node lo ejecute sin compilar (brand:export).
+    "allowImportingTsExtensions": true
   },
   "include": ["**/*.ts", "**/*.tsx"],
-  "exclude": ["node_modules", "coverage"]
+  // scripts/ corre en Node y tiene su propio tsconfig (tipos de Node).
+  "exclude": ["node_modules", "coverage", "scripts"]
 }

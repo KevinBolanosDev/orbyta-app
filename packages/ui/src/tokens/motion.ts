@@ -101,6 +101,8 @@ export const timing = {
   logoEntrance: 2400,
   /** M23 destello de la estrella. */
   starTwinkle: 3200,
+  /** M22 halo del módulo activo. */
+  moduleHalo: 300,
   /** Fundido que se mantiene con "reducir movimiento". */
   reducedMotionFade: 150,
 } as const;

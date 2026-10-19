@@ -1,0 +1,10 @@
+{
+  // Scripts de @repo/ui que corren en Node 24 sin compilar (brand:export).
+  "extends": ["../node_modules/expo/tsconfig.base.json", "@repo/config/tsconfig/strict.json"],
+  "compilerOptions": {
+    "types": ["node"],
+    "allowImportingTsExtensions": true,
+    "noEmit": true
+  },
+  "include": ["./**/*.ts"]
+}

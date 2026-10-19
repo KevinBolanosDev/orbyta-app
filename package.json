@@ -19,7 +19,8 @@
     "format:check": "prettier --check .",
     "check": "pnpm format:check && turbo run lint typecheck arch test:coverage && pnpm arch:selftest && pnpm audit",
     "prepare": "husky",
-    "arch:selftest": "node tools/arch-selftest.mjs"
+    "arch:selftest": "node tools/arch-selftest.mjs",
+    "brand:export": "pnpm --filter @repo/ui brand:export"
   },
   "devDependencies": {
     "@commitlint/cli": "21.2.3",

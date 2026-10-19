@@ -1,5 +1,5 @@
-import { withAlpha } from '../lib/color';
-import type { LinearGradientToken } from '../lib/gradient';
+import { withAlpha } from '../lib/color.ts';
+import type { LinearGradientToken } from '../lib/gradient.ts';
 
 // Color semántico, de categorías y degradado holográfico (design-system.md §2.1 y §2.2).
 
