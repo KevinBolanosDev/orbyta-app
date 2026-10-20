@@ -3,6 +3,7 @@ import { Pressable, type PressableProps } from 'react-native';
 import Animated, { useAnimatedStyle, useSharedValue, withSpring } from 'react-native-reanimated';
 import { StyleSheet } from 'react-native-unistyles';
 
+import { focusRing } from '../../lib/focus-ring';
 import { useReduceMotion } from '../../motion/accessibility-preferences';
 import { springConfig } from '../../motion/easing';
 import { usePress } from '../../motion/use-press';
@@ -45,7 +46,7 @@ export function Fab({ icon, accessibilityLabel, expanded, onPress, style, testID
       onPress={onPress}
       onPressIn={onPressIn}
       onPressOut={onPressOut}
-      style={style}
+      style={[styles.focus, style]}
       testID={testID}
     >
       <Animated.View style={[styles.body, animatedStyle]}>
@@ -59,6 +60,7 @@ export function Fab({ icon, accessibilityLabel, expanded, onPress, style, testID
 }
 
 const styles = StyleSheet.create((theme) => ({
+  focus: focusRing(theme.colors.focus),
   body: {
     width: componentSize.fab,
     height: componentSize.fab,

@@ -40,8 +40,14 @@ export interface ModuleIconProps extends Pick<ViewProps, 'style' | 'testID'> {
 
 const ACTIVE_SCALE = 1.12;
 const INACTIVE_OPACITY = 0.85;
-/** El halo sobresale un 25 % por cada lado. */
-const HALO_RATIO = 1.5;
+/** El halo sobresale un 40 % por cada lado. */
+const HALO_RATIO = 1.8;
+/**
+ * Dónde termina el ícono dentro del halo (radio del ícono / radio del halo). El degradado se
+ * mantiene fuerte hasta ahí y se desvanece hacia afuera: antes caía desde el centro y en el borde
+ * visible quedaba al ~15 %, casi no se notaba (F1.9).
+ */
+const HALO_ICON_EDGE = 1 / HALO_RATIO;
 
 /**
  * BR02 · Ícono de módulo (§11.5). Al pasar a `active` corre M22: escala 1,12 con resorte, halo del
@@ -106,7 +112,8 @@ export function ModuleIcon({
         <Svg width={haloSize} height={haloSize}>
           <Defs>
             <RadialGradient id={haloId} cx="50%" cy="50%" r="50%">
-              <Stop offset={0} stopColor={color} stopOpacity={0.45} />
+              <Stop offset={0} stopColor={color} stopOpacity={0.55} />
+              <Stop offset={HALO_ICON_EDGE} stopColor={color} stopOpacity={0.45} />
               <Stop offset={1} stopColor={color} stopOpacity={0} />
             </RadialGradient>
           </Defs>

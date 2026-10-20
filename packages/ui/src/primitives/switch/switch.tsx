@@ -9,6 +9,7 @@ import Animated, {
 import { StyleSheet, useUnistyles } from 'react-native-unistyles';
 
 import { withAlpha } from '../../lib/color';
+import { focusRing } from '../../lib/focus-ring';
 import { useReduceMotion } from '../../motion/accessibility-preferences';
 import { timingConfig } from '../../motion/easing';
 import { triggerHaptic } from '../../motion/haptics';
@@ -69,7 +70,7 @@ export function Switch({
         triggerHaptic('selection');
         onValueChange(!value);
       }}
-      style={[styles.row(disabled), style]}
+      style={[styles.row(disabled), styles.focus, style]}
       testID={testID}
     >
       <View style={styles.texts}>
@@ -88,6 +89,7 @@ export function Switch({
 }
 
 const styles = StyleSheet.create((theme) => ({
+  focus: focusRing(theme.colors.focus),
   row: (disabled: boolean) => ({
     minHeight: theme.layout.minTouchTarget,
     flexDirection: 'row',

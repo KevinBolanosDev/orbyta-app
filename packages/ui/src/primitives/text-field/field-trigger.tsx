@@ -2,6 +2,7 @@ import ChevronDown from 'lucide-react-native/icons/chevron-down';
 import { Pressable, type StyleProp, type ViewStyle } from 'react-native';
 import { StyleSheet } from 'react-native-unistyles';
 
+import { focusRing } from '../../lib/focus-ring';
 import { Icon, type IconComponent } from '../icon/icon';
 import { Text } from '../text/text';
 
@@ -49,6 +50,7 @@ export function FieldTrigger({
         accessibilityState={{ disabled, expanded }}
         disabled={disabled}
         onPress={onPress}
+        style={styles.focus}
       >
         <FieldBox focused={expanded} invalid={error !== undefined} disabled={disabled}>
           <Text
@@ -66,8 +68,9 @@ export function FieldTrigger({
   );
 }
 
-const styles = StyleSheet.create({
+const styles = StyleSheet.create((theme) => ({
+  focus: focusRing(theme.colors.focus),
   value: {
     flex: 1,
   },
-});
+}));

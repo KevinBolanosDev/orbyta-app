@@ -1,3 +1,5 @@
+import { Platform } from 'react-native';
+
 import {
   categoryColors,
   elevation,
@@ -18,7 +20,7 @@ import {
  * cambian con el tema (espaciado, radios…) para usarlos como `theme.space[4]` dentro de los estilos.
  * En web, Unistyles convierte cada texto del tema en una variable CSS (`--colors-bg`).
  */
-export function createTheme(scheme: ColorScheme) {
+export function createTheme(scheme: ColorScheme, os: string = Platform.OS) {
   const colors = semanticColors[scheme];
   return {
     scheme,
@@ -26,7 +28,8 @@ export function createTheme(scheme: ColorScheme) {
     categories: categoryColors[scheme],
     modules: moduleColors(scheme),
     holo: holoGradient,
-    elevation: elevation(scheme, colors),
+    // Android: sombras cortas y glow centrado (ver `elevation`).
+    elevation: elevation(scheme, colors, os === 'android'),
     glass: glass[scheme],
     font: fontFamily,
     space,

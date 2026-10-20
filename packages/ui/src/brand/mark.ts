@@ -107,6 +107,85 @@ const sparkleNode = (scale: number, color: string) =>
     transform: scaleAround(scale, SPARKLE.cx, SPARKLE.cy),
   });
 
+interface MarkIds {
+  planet: string;
+  orbit: string;
+  front: string;
+  glow: string;
+  planetClip: string;
+}
+
+const markIds = (p: string): MarkIds => ({
+  planet: `${p}-planet`,
+  orbit: `${p}-orbit`,
+  front: `${p}-front`,
+  glow: `${p}-glow`,
+  planetClip: `${p}-planet-clip`,
+});
+
+const planetGradient = (id: string) =>
+  el(
+    'radialGradient',
+    { id, cx: PLANET.gradient.cx, cy: PLANET.gradient.cy, r: PLANET.gradient.r },
+    PLANET.gradient.stops.map((stop) => el('stop', { offset: stop.offset, stopColor: stop.color })),
+  );
+
+const orbitGradient = (id: string) =>
+  el(
+    'linearGradient',
+    { id, gradientUnits: 'userSpaceOnUse', x1: ORBIT_STROKE.x1, y1: 0, x2: ORBIT_STROKE.x2, y2: 0 },
+    ORBIT_STROKE.colors.map((color, index) =>
+      el('stop', { offset: index / (ORBIT_STROKE.colors.length - 1), stopColor: color }),
+    ),
+  );
+
+const glowGradient = (id: string) =>
+  el('radialGradient', { id, cx: 0.5, cy: 0.5, r: 0.5 }, [
+    el('stop', { offset: 0, stopColor: STAR.glowColor, stopOpacity: 0.6 }),
+    el('stop', { offset: 1, stopColor: STAR.glowColor, stopOpacity: 0 }),
+  ]);
+
+/** Planeta con su brillo y, durante la entrada, el reflejo que lo cruza. */
+function planetNode(entrance: EntranceState, ids: MarkIds, planetR: number): SvgNode {
+  const { highlight } = PLANET;
+  const sheen =
+    entrance.sheenProgress === null
+      ? []
+      : [
+          el('g', { clipPath: `url(#${ids.planetClip})` }, [
+            el('rect', {
+              x: 30 + 140 * entrance.sheenProgress - 9,
+              y: 30,
+              width: 18,
+              height: 140,
+              fill: '#FFFFFF',
+              opacity: 0.35,
+              transform: `rotate(-20 100 100)`,
+            }),
+          ]),
+        ];
+  return el(
+    'g',
+    {
+      opacity: entrance.planetOpacity,
+      transform: scaleAround(entrance.planetScale, PLANET.cx, PLANET.cy),
+    },
+    [
+      el('circle', { cx: PLANET.cx, cy: PLANET.cy, r: planetR, fill: `url(#${ids.planet})` }),
+      el('ellipse', {
+        cx: highlight.cx,
+        cy: highlight.cy,
+        rx: highlight.rx,
+        ry: highlight.ry,
+        fill: highlight.color,
+        opacity: highlight.opacity,
+        transform: `rotate(${highlight.rotate} ${highlight.cx} ${highlight.cy})`,
+      }),
+      ...sheen,
+    ],
+  );
+}
+
 /** Piezas del logo para una escena. */
 export function brandMarkParts(scene: BrandMarkScene): SvgParts {
   if (scene.variant === 'mono') return monoMarkParts(scene);
@@ -116,19 +195,9 @@ export function brandMarkParts(scene: BrandMarkScene): SvgParts {
   const frame = orbitFrame(scene.phi ?? ORBIT.restPhi);
   const dots = variant === 'dots';
   const planetR = dots ? PLANET.dotsR : PLANET.r;
-  const ids = {
-    planet: `${p}-planet`,
-    orbit: `${p}-orbit`,
-    front: `${p}-front`,
-    glow: `${p}-glow`,
-    planetClip: `${p}-planet-clip`,
-  };
+  const ids = markIds(p);
 
-  const icons = dots
-    ? null
-    : (Object.fromEntries(
-        MODULE_IDS.map((id) => [id, moduleIconParts(id, scheme, `${p}-${id}`)] as const),
-      ) as Record<ModuleId, SvgParts>);
+  const icons = dots ? null : cachedIcons(scheme, p);
 
   const slotNode = (slot: OrbitSlot): SvgNode => {
     if (!icons) {
@@ -170,81 +239,24 @@ export function brandMarkParts(scene: BrandMarkScene): SvgParts {
       children,
     );
 
-  const { gradient, highlight } = PLANET;
-  const defs: SvgNode[] = [
-    el(
-      'radialGradient',
-      { id: ids.planet, cx: gradient.cx, cy: gradient.cy, r: gradient.r },
-      gradient.stops.map((stop) => el('stop', { offset: stop.offset, stopColor: stop.color })),
-    ),
-    el(
-      'linearGradient',
-      {
-        id: ids.orbit,
-        gradientUnits: 'userSpaceOnUse',
-        x1: ORBIT_STROKE.x1,
-        y1: 0,
-        x2: ORBIT_STROKE.x2,
-        y2: 0,
-      },
-      ORBIT_STROKE.colors.map((color, index) =>
-        el('stop', { offset: index / (ORBIT_STROKE.colors.length - 1), stopColor: color }),
-      ),
-    ),
+  const defs = cachedDefs(`${variant}|${scheme}|${p}`, () => [
+    planetGradient(ids.planet),
+    orbitGradient(ids.orbit),
     frontClip(ids.front),
-    el('radialGradient', { id: ids.glow, cx: 0.5, cy: 0.5, r: 0.5 }, [
-      el('stop', { offset: 0, stopColor: STAR.glowColor, stopOpacity: 0.6 }),
-      el('stop', { offset: 1, stopColor: STAR.glowColor, stopOpacity: 0 }),
-    ]),
+    glowGradient(ids.glow),
     el('clipPath', { id: ids.planetClip }, [
       el('circle', { cx: PLANET.cx, cy: PLANET.cy, r: planetR }),
     ]),
     ...(icons ? MODULE_IDS.flatMap((id) => icons[id].defs) : []),
-  ];
+  ]);
 
   const ring = (extra: Record<string, string> = {}) =>
     ringPath(frame.ringPath, `url(#${ids.orbit})`, ORBIT_STROKE.width, extra);
 
-  const sheen =
-    entrance.sheenProgress === null
-      ? []
-      : [
-          el('g', { clipPath: `url(#${ids.planetClip})` }, [
-            el('rect', {
-              x: 30 + 140 * entrance.sheenProgress - 9,
-              y: 30,
-              width: 18,
-              height: 140,
-              fill: '#FFFFFF',
-              opacity: 0.35,
-              transform: `rotate(-20 100 100)`,
-            }),
-          ]),
-        ];
-
   const body: SvgNode[] = [
     orbitGroup([ring({ opacity: String(ORBIT_STROKE.backOpacity) })]),
     orbitGroup(frame.slots.filter((slot) => slot.layer === 'back').map(slotNode)),
-    el(
-      'g',
-      {
-        opacity: entrance.planetOpacity,
-        transform: scaleAround(entrance.planetScale, PLANET.cx, PLANET.cy),
-      },
-      [
-        el('circle', { cx: PLANET.cx, cy: PLANET.cy, r: planetR, fill: `url(#${ids.planet})` }),
-        el('ellipse', {
-          cx: highlight.cx,
-          cy: highlight.cy,
-          rx: highlight.rx,
-          ry: highlight.ry,
-          fill: highlight.color,
-          opacity: highlight.opacity,
-          transform: `rotate(${highlight.rotate} ${highlight.cx} ${highlight.cy})`,
-        }),
-        ...sheen,
-      ],
-    ),
+    planetNode(entrance, ids, planetR),
     orbitGroup([ring({ clipPath: `url(#${ids.front})` })]),
     orbitGroup(frame.slots.filter((slot) => slot.layer === 'front').map(slotNode)),
     ...trailNodes(entrance, TRAIL.color, TRAIL.stepColor),
@@ -253,6 +265,96 @@ export function brandMarkParts(scene: BrandMarkScene): SvgParts {
   ];
 
   return { defs, body };
+}
+
+/**
+ * Capas del logo con íconos (variantes `animated` e `icons`) ya terminada la entrada, para moverlo
+ * en el hilo de UI (F1.9): lo fijo va en SVG que no se vuelven a dibujar (planeta; estela y
+ * estrella) y lo que se mueve va aparte. El trazo de la órbita trae sus atributos sin `d`, que
+ * calcula el worklet de `orbitFrame`; los íconos van en vistas que se mueven con `transform`; el
+ * destello va a escala 1 y se escala la vista. Cada capa es un `<Svg>` propio, con sus `defs`.
+ */
+export interface BrandMarkLayers {
+  /** `defs` del trazo: degradado y recorte del semiplano delantero. */
+  ringDefs: SvgNode[];
+  /** Atributos del trazo de la órbita (sin `d`). */
+  ringAttrs: Record<string, string | number>;
+  /** Opacidad del trazo de atrás. */
+  ringBackOpacity: number;
+  /** `url(#…)` del recorte del trazo de adelante. */
+  ringFrontClip: string;
+  planet: SvgParts;
+  /** Estela y estrella. */
+  overlay: SvgParts;
+  sparkle: SvgNode;
+  icons: Record<ModuleId, SvgParts>;
+}
+
+export function brandMarkLayers(scheme: ColorScheme, idPrefix: string): BrandMarkLayers {
+  return remember(layersCache, `${scheme}|${idPrefix}`, () => {
+    const ids = markIds(idPrefix);
+    return {
+      ringDefs: [orbitGradient(ids.orbit), frontClip(ids.front)],
+      ringAttrs: {
+        fill: 'none',
+        stroke: `url(#${ids.orbit})`,
+        strokeWidth: ORBIT_STROKE.width,
+        strokeLinecap: 'round',
+        strokeLinejoin: 'round',
+      },
+      ringBackOpacity: ORBIT_STROKE.backOpacity,
+      ringFrontClip: `url(#${ids.front})`,
+      planet: {
+        defs: [planetGradient(ids.planet)],
+        body: [planetNode(ENTRANCE_DONE, ids, PLANET.r)],
+      },
+      overlay: {
+        defs: [glowGradient(ids.glow)],
+        body: [
+          ...trailNodes(ENTRANCE_DONE, TRAIL.color, TRAIL.stepColor),
+          starNode(ENTRANCE_DONE, STAR.color, ids.glow),
+        ],
+      },
+      sparkle: sparkleNode(1, SPARKLE.color),
+      icons: cachedIcons(scheme, idPrefix),
+    };
+  });
+}
+
+// Piezas fijas del logo animado, reutilizadas entre cuadros: los cuerpos de los íconos de módulo y
+// los `defs` no cambian con la órbita. Con los mismos objetos, React salta esos subárboles en cada
+// cuadro (SvgPartsView memoriza por nodo) y solo procesa los grupos que se mueven (F1.9, Android).
+const PARTS_CACHE_LIMIT = 48;
+const iconsCache = new Map<string, Record<ModuleId, SvgParts>>();
+const defsCache = new Map<string, SvgNode[]>();
+const layersCache = new Map<string, BrandMarkLayers>();
+
+function remember<T>(cache: Map<string, T>, key: string, build: () => T): T {
+  const hit = cache.get(key);
+  if (hit) return hit;
+  const value = build();
+  // Tope simple: cada logo montado usa una clave; al pasarlo se descarta la más vieja.
+  if (cache.size >= PARTS_CACHE_LIMIT) {
+    const oldest = cache.keys().next().value;
+    if (oldest !== undefined) cache.delete(oldest);
+  }
+  cache.set(key, value);
+  return value;
+}
+
+function cachedIcons(scheme: BrandMarkScene['scheme'], prefix: string) {
+  return remember(
+    iconsCache,
+    `${scheme}|${prefix}`,
+    () =>
+      Object.fromEntries(
+        MODULE_IDS.map((id) => [id, moduleIconParts(id, scheme, `${prefix}-${id}`)] as const),
+      ) as Record<ModuleId, SvgParts>,
+  );
+}
+
+function cachedDefs(key: string, build: () => SvgNode[]): SvgNode[] {
+  return remember(defsCache, key, build);
 }
 
 // Monocromo (§11.4): silueta de un color. Donde la órbita pasa por delante, una máscara recorta el

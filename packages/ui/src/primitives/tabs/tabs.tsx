@@ -3,6 +3,7 @@ import { Pressable, ScrollView, View, type ViewProps } from 'react-native';
 import Animated from 'react-native-reanimated';
 import { StyleSheet } from 'react-native-unistyles';
 
+import { focusRing } from '../../lib/focus-ring';
 import { triggerHaptic } from '../../motion/haptics';
 import { useSlideIndicator, type SlotLayout } from '../../motion/use-slide-indicator';
 import { componentSize } from '../../tokens';
@@ -66,7 +67,7 @@ export function Tabs<T extends string>({
                   const { x, width } = event.nativeEvent.layout;
                   setLayouts((current) => ({ ...current, [tab.value]: { x, width } }));
                 }}
-                style={styles.tab}
+                style={[styles.tab, styles.focus]}
               >
                 <Text variant="label" tone={selected ? 'primary' : 'muted'}>
                   {tab.label}
@@ -85,6 +86,7 @@ export function Tabs<T extends string>({
 }
 
 const styles = StyleSheet.create((theme) => ({
+  focus: focusRing(theme.colors.focus),
   root: {
     borderBottomWidth: 1,
     borderBottomColor: theme.glass.card.border,

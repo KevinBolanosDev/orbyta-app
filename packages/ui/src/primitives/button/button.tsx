@@ -8,6 +8,7 @@ import {
 import Animated from 'react-native-reanimated';
 import { StyleSheet, useUnistyles } from 'react-native-unistyles';
 
+import { focusRing } from '../../lib/focus-ring';
 import { usePress } from '../../motion/use-press';
 import { Icon, IconColorProvider, type IconComponent } from '../icon/icon';
 import { Text } from '../text/text';
@@ -38,7 +39,7 @@ const HEIGHT: Record<ButtonSize, number> = { m: 48, s: 40 };
 
 /**
  * P03 · Button. Presión M02 (escala 0,96 con resorte y háptica ligera). Con `loading` o `disabled`
- * queda `aria-disabled` y no anima. TODO(F1.9): anillo de foco de 2 px para teclado en web.
+ * queda `aria-disabled` y no anima. En web, con teclado, muestra el anillo de foco (`focusRing`).
  */
 export function Button({
   label,
@@ -74,7 +75,7 @@ export function Button({
       onPressIn={onPressIn}
       onPressOut={onPressOut}
       hitSlop={size === 's' ? (theme.layout.minTouchTarget - HEIGHT.s) / 2 : undefined}
-      style={[styles.pressable(fullWidth), style]}
+      style={[styles.pressable(fullWidth), styles.focus, style]}
       testID={testID}
     >
       <Animated.View style={[styles.body(variant, size, inactive), animatedStyle]}>
@@ -94,6 +95,7 @@ export function Button({
 }
 
 const styles = StyleSheet.create((theme) => ({
+  focus: focusRing(theme.colors.focus),
   pressable: (fullWidth: boolean) => ({
     alignSelf: fullWidth ? 'stretch' : 'flex-start',
   }),

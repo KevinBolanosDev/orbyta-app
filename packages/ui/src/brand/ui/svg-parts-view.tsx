@@ -1,4 +1,4 @@
-import type { ComponentType, ReactNode } from 'react';
+import { memo, type ComponentType, type ReactNode } from 'react';
 import {
   Circle,
   ClipPath,
@@ -38,11 +38,32 @@ const COMPONENTS: Partial<Record<SvgTag, SvgComponent>> = {
 };
 
 function renderNode(node: SvgNode, index: number): ReactNode {
+  return <NodeView key={node.key ?? index} node={node} />;
+}
+
+/**
+ * Un nodo del árbol. Memorizado por identidad: el logo animado reutiliza las piezas fijas (íconos,
+ * `defs`) entre cuadros y React salta esos subárboles; solo vuelve a pintar lo que se mueve.
+ */
+const NodeView = memo(function NodeView({ node }: { node: SvgNode }) {
+  return renderPlain(node);
+});
+
+/** Los degradados leen sus `<Stop>` de los hijos directos: van sin el envoltorio memorizado. */
+const GRADIENTS: ReadonlySet<SvgTag> = new Set(['linearGradient', 'radialGradient']);
+
+function renderPlain(node: SvgNode, key?: string | number): ReactNode {
   const Component = COMPONENTS[node.tag];
   if (!Component) return null;
+  const children =
+    node.children.length === 0
+      ? undefined
+      : GRADIENTS.has(node.tag)
+        ? node.children.map((child, index) => renderPlain(child, child.key ?? index))
+        : node.children.map(renderNode);
   return (
-    <Component key={node.key ?? index} {...node.attrs}>
-      {node.children.length > 0 ? node.children.map(renderNode) : undefined}
+    <Component key={key} {...node.attrs}>
+      {children}
     </Component>
   );
 }

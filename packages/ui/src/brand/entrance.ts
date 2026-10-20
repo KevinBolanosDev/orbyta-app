@@ -98,8 +98,11 @@ export function entranceAt(ms: number): EntranceState {
 
 /** M23 · Escala del destello: 1 → 0,8 → 1 cada 3,2 s con `sine.inOut`. */
 export function twinkleScale(ms: number): number {
+  'worklet';
   const cycle = (ms % TWINKLE_PERIOD) / TWINKLE_PERIOD;
-  return 1 - 0.2 * brandEase.sineInOut(cycle < 0.5 ? cycle * 2 : 2 - cycle * 2);
+  const p = cycle < 0.5 ? cycle * 2 : 2 - cycle * 2;
+  // `sine.inOut` escrito aquí: en el hilo de UI no se puede llamar a `brandEase` (no es worklet).
+  return 1 - 0.2 * (-(Math.cos(Math.PI * p) - 1) / 2);
 }
 
 interface Point {

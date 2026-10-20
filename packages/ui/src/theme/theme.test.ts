@@ -26,8 +26,15 @@ describe('themes', () => {
     expect(darkTheme.glass.card.fill).not.toBe(lightTheme.glass.card.fill);
   });
 
+  it('uses shorter shadows and a centered glow on Android', () => {
+    const android = createTheme('dark', 'android').elevation;
+    expect(android.glow).toBe(`0 2px 12px ${darkTheme.colors.glow}`);
+    expect(android.e2).not.toBe(createTheme('dark', 'web').elevation.e2);
+    expect(createTheme('light', 'android').elevation.e1).toMatch(/^0 3px 8px/);
+  });
+
   it('builds the glow elevation from the theme glow color', () => {
-    expect(createTheme('dark').elevation.glow).toBe(`0 10px 30px ${darkTheme.colors.glow}`);
+    expect(createTheme('dark', 'web').elevation.glow).toBe(`0 10px 30px ${darkTheme.colors.glow}`);
   });
 
   it('shares the theme-independent tokens', () => {

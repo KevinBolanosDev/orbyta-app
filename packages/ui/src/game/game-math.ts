@@ -82,25 +82,29 @@ export function tiltFromPoint(
   y: number,
   width: number,
   height: number,
-  max = MAX_TILT,
+  max?: number,
 ): Tilt {
   'worklet';
+  // El tope se lee en el cuerpo: un valor por defecto que use una constante de afuera no llega al
+  // hilo de UI (el plugin de worklets no la captura y en Android falla "MAX_TILT doesn't exist").
+  const limit = max ?? MAX_TILT;
   if (width <= 0 || height <= 0) return { rotateX: 0, rotateY: 0 };
   const dx = x / width - 0.5;
   const dy = y / height - 0.5;
-  return { rotateX: clampTilt(-dy * 2 * max, max), rotateY: clampTilt(dx * 2 * max, max) };
+  return { rotateX: clampTilt(-dy * 2 * limit, limit), rotateY: clampTilt(dx * 2 * limit, limit) };
 }
 
 /**
  * M14 con giroscopio (móvil): grados de inclinación a partir de cuánto se movió el teléfono desde
  * su posición de reposo (`pitch` y `roll` en radianes). Unos 20° de giro llevan la carta al tope.
  */
-export function tiltFromRotation(pitchDelta: number, rollDelta: number, max = MAX_TILT): Tilt {
+export function tiltFromRotation(pitchDelta: number, rollDelta: number, max?: number): Tilt {
   'worklet';
+  const limit = max ?? MAX_TILT;
   // El ángulo puede dar la vuelta (de π a −π): se usa el giro más corto.
   const toTilt = (radians: number) => {
     const shortest = Math.atan2(Math.sin(radians), Math.cos(radians));
-    return clampTilt(((shortest * 180) / Math.PI) * (max / 20), max);
+    return clampTilt(((shortest * 180) / Math.PI) * (limit / 20), limit);
   };
   return { rotateX: toTilt(pitchDelta), rotateY: toTilt(rollDelta) };
 }

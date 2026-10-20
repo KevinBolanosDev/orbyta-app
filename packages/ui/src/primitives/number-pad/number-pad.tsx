@@ -4,6 +4,7 @@ import Animated from 'react-native-reanimated';
 import { StyleSheet, useUnistyles } from 'react-native-unistyles';
 
 import type { AmountKey } from '../../lib/amount-input';
+import { focusRing } from '../../lib/focus-ring';
 import { NUMBER_SEPARATORS, type NumberLocale } from '../../lib/format-number';
 import { usePress } from '../../motion/use-press';
 import { Icon } from '../icon/icon';
@@ -108,7 +109,7 @@ function PadKey({
       onLongPress={onLongPress}
       onPressIn={onPressIn}
       onPressOut={onPressOut}
-      style={styles.keySlot}
+      style={[styles.keySlot, styles.focus]}
     >
       <Animated.View style={[styles.key(disabled), animatedStyle]}>{children}</Animated.View>
     </Pressable>
@@ -118,6 +119,7 @@ function PadKey({
 const KEY_HEIGHT = 56;
 
 const styles = StyleSheet.create((theme) => ({
+  focus: focusRing(theme.colors.focus),
   pad: {
     gap: theme.space[2],
   },

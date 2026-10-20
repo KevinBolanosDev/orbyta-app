@@ -1,4 +1,10 @@
-import { cssAngleToSvgVector, toCssLinearGradient } from './gradient';
+import {
+  cssAngleToSvgVector,
+  svgFill,
+  svgStopColor,
+  svgStroke,
+  toCssLinearGradient,
+} from './gradient';
 
 describe('cssAngleToSvgVector', () => {
   it.each([
@@ -29,5 +35,21 @@ describe('toCssLinearGradient', () => {
         ],
       }),
     ).toBe('linear-gradient(125deg, #2EE6F2 0%, #8B5CFF 50%, #4C7DFF 100%)');
+  });
+});
+
+describe('SVG colors with a separate alpha (Android)', () => {
+  it('splits rgba into an opaque color and its opacity', () => {
+    expect(svgStopColor('rgba(255,255,255,0.1)')).toEqual({
+      stopColor: '#FFFFFF',
+      stopOpacity: 0.1,
+    });
+    expect(svgStopColor('#2EE6F2')).toEqual({ stopColor: '#2EE6F2', stopOpacity: 1 });
+    expect(svgFill('rgba(46,230,242,0.35)')).toEqual({ fill: '#2EE6F2', fillOpacity: 0.35 });
+    expect(svgStroke('#FFFFFF80')).toEqual({ stroke: '#FFFFFF', strokeOpacity: 128 / 255 });
+  });
+
+  it('leaves other color values untouched', () => {
+    expect(svgStopColor('transparent')).toEqual({ stopColor: 'transparent', stopOpacity: 1 });
   });
 });

@@ -16,13 +16,14 @@ import { useAppActive } from './use-app-active';
 
 /**
  * M09 · Orbes ambientales: deriva de hasta ±60 px en 8 s con `sine.inOut`, ida y vuelta, en bucle.
- * Se pausa con la app en segundo plano; con "reducir movimiento" el orbe vuelve a su sitio y queda
- * quieto. `seed` hace que cada orbe vaya a un destino distinto.
- * TODO(F1.9): pausar también en modo ahorro de batería (necesita expo-battery).
+ * Se pausa con la app en segundo plano o con `paused` (pantalla tapada por otra); con "reducir
+ * movimiento" el orbe vuelve a su sitio y queda quieto. `seed` hace que cada orbe vaya a un destino
+ * distinto.
+ * TODO(F2): pausar también en modo ahorro de batería (necesita expo-battery).
  */
-export function useOrbDrift(seed: number) {
+export function useOrbDrift(seed: number, paused = false) {
   const reduceMotion = useReduceMotion();
-  const appActive = useAppActive();
+  const appActive = useAppActive() && !paused;
   const x = useSharedValue(0);
   const y = useSharedValue(0);
   const target = useMemo(() => orbDriftTarget(seed, distance.orbDrift), [seed]);

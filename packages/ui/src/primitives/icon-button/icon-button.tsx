@@ -2,6 +2,7 @@ import { Pressable, type PressableProps } from 'react-native';
 import Animated from 'react-native-reanimated';
 import { StyleSheet } from 'react-native-unistyles';
 
+import { focusRing } from '../../lib/focus-ring';
 import { usePress } from '../../motion/use-press';
 import { Icon, type IconComponent } from '../icon/icon';
 import type { TextTone } from '../text/text';
@@ -42,7 +43,7 @@ export function IconButton({
       onPress={onPress}
       onPressIn={onPressIn}
       onPressOut={onPressOut}
-      style={style}
+      style={[styles.focus, style]}
       testID={testID}
     >
       <Animated.View style={[styles.body(variant, disabled), animatedStyle]}>
@@ -53,6 +54,7 @@ export function IconButton({
 }
 
 const styles = StyleSheet.create((theme) => ({
+  focus: focusRing(theme.colors.focus),
   body: (variant: IconButtonVariant, disabled: boolean) => ({
     width: theme.layout.minTouchTarget,
     height: theme.layout.minTouchTarget,

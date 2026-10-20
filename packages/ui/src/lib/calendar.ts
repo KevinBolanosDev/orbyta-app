@@ -2,17 +2,18 @@
 // como día calendario local `YYYY-MM-DD` (igual que `toIsoDate` de @repo/utils): sin hora ni zona, se
 // comparan como texto y no se corren de día al cambiar de zona horaria.
 
-import {
-  addDays,
-  addMonths,
-  endOfMonth,
-  format,
-  isValid,
-  parse,
-  startOfMonth,
-  startOfWeek,
-} from 'date-fns';
-import { enUS, es } from 'date-fns/locale';
+// Imports por función y por idioma: Metro no descarta código sin usar, y `from 'date-fns'` metía
+// toda la librería y sus ~90 idiomas en el bundle (~1 MB sin minificar, medido en F1.9).
+import { addDays } from 'date-fns/addDays';
+import { addMonths } from 'date-fns/addMonths';
+import { endOfMonth } from 'date-fns/endOfMonth';
+import { format } from 'date-fns/format';
+import { isValid } from 'date-fns/isValid';
+import { enUS } from 'date-fns/locale/en-US';
+import { es } from 'date-fns/locale/es';
+import { parse } from 'date-fns/parse';
+import { startOfMonth } from 'date-fns/startOfMonth';
+import { startOfWeek } from 'date-fns/startOfWeek';
 
 import type { NumberLocale } from './format-number';
 

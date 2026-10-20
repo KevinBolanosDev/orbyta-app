@@ -23,6 +23,12 @@ export type AuroraIntensity = 'full' | 'dimmed';
 
 export interface AuroraBackgroundProps extends Pick<ViewProps, 'style' | 'testID'> {
   intensity?: AuroraIntensity;
+  /**
+   * Detiene la deriva sin moverla de su sitio: la pantalla quedó tapada por otra en la pila de
+   * navegación. Reanimated sigue calculando las animaciones aunque no se vean (en Android, la aurora
+   * de la pantalla de abajo ocupaba el hilo de UI). La pantalla se lo pasa con su foco (F1.9).
+   */
+  paused?: boolean;
 }
 
 interface Placement {
@@ -97,7 +103,12 @@ const RIBBON_PATH =
  * de UI, así el SVG no se vuelve a dibujar en cada cuadro. Se pausa con la app en segundo plano y
  * queda quieto con "reducir movimiento". Llena a su contenedor y es decorativo.
  */
-export function AuroraBackground({ intensity = 'full', style, testID }: AuroraBackgroundProps) {
+export function AuroraBackground({
+  intensity = 'full',
+  paused = false,
+  style,
+  testID,
+}: AuroraBackgroundProps) {
   const { theme } = useUnistyles();
   return (
     <View
@@ -115,6 +126,7 @@ export function AuroraBackground({ intensity = 'full', style, testID }: AuroraBa
             seed={orb.seed}
             size={orb.size}
             position={orb.position}
+            paused={paused}
           />
         ))}
         {RIBBONS.map((ribbon) => (
@@ -123,6 +135,7 @@ export function AuroraBackground({ intensity = 'full', style, testID }: AuroraBa
             ribbon={ribbon}
             color={theme.colors[ribbon.color]}
             alpha={ribbon.alpha[theme.scheme]}
+            paused={paused}
           />
         ))}
       </View>
@@ -139,13 +152,15 @@ function Orb({
   seed,
   size,
   position,
+  paused,
 }: {
   color: string;
   seed: number;
   size: number;
   position: Placement;
+  paused: boolean;
 }) {
-  const drift = useOrbDrift(seed);
+  const drift = useOrbDrift(seed, paused);
   const id = `orb-${useId().replace(/[^\w-]/g, '')}`;
   const rgba = parseColor(color);
   const hex = toHex(rgba);
@@ -167,9 +182,19 @@ function Orb({
 }
 
 /** Cortina de aurora: se desliza, se estira y respira, ida y vuelta con `sine.inOut`. */
-function AuroraRibbon({ ribbon, color, alpha }: { ribbon: Ribbon; color: string; alpha: number }) {
+function AuroraRibbon({
+  ribbon,
+  color,
+  alpha,
+  paused,
+}: {
+  ribbon: Ribbon;
+  color: string;
+  alpha: number;
+  paused: boolean;
+}) {
   const reduceMotion = useReduceMotion();
-  const appActive = useAppActive();
+  const appActive = useAppActive() && !paused;
   const wave = useSharedValue(0.5);
   const id = `ribbon-${useId().replace(/[^\w-]/g, '')}`;
   const hex = toHex(parseColor(color));

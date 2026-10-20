@@ -35,9 +35,35 @@ describe('scales', () => {
 
   it('scales linearly and rounds ticks to nice values', () => {
     expect(linear([0, 10], [100, 0])(5)).toBe(50);
+    expect(linear([4, 4], [0, 80])(4)).toBe(40);
     const { domain, ticks } = niceTicks([3, 97], 3);
     expect(domain).toEqual([0, 100]);
     expect(ticks).toEqual([0, 50, 100]);
+  });
+
+  it.each([
+    // Valores de d3-scale 4.0.2: `scaleLinear().domain(d).nice(n)`, `.domain()` y `.ticks(n)`.
+    [[3, 97], 3, [0, 100], [0, 50, 100]],
+    [[0.12, 0.87], 4, [0, 1], [0, 0.2, 0.4, 0.6, 0.8, 1]],
+    [[-37, 81], 5, [-40, 100], [-40, -20, 0, 20, 40, 60, 80, 100]],
+    [
+      [118_400_000, 134_900_000],
+      3,
+      [115_000_000, 135_000_000],
+      [115_000_000, 120_000_000, 125_000_000, 130_000_000, 135_000_000],
+    ],
+    [[90, 10], 2, [100, 0], [100, 50, 0]],
+    [[5, 5], 3, [5, 5], [5]],
+    [
+      [1_850_000, 2_410_000],
+      3,
+      [1_800_000, 2_600_000],
+      [1_800_000, 2_000_000, 2_200_000, 2_400_000, 2_600_000],
+    ],
+    [[-0.004, 0.013], 4, [-0.005, 0.015], [-0.005, 0, 0.005, 0.01, 0.015]],
+    [[0, 1], 10, [0, 1], [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1]],
+  ] as const)('matches d3 for %j with %d ticks', (domain, count, nice, marks) => {
+    expect(niceTicks(domain, count)).toEqual({ domain: nice, ticks: marks });
   });
 
   it('spreads points and finds the nearest one', () => {

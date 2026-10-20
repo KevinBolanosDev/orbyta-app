@@ -1,5 +1,7 @@
 // Degradados lineales descritos como datos, para pintarlos igual en SVG (nativo y web) y en CSS.
 
+import { parseColor, toHex } from './color.ts';
+
 export interface GradientStop {
   color: string;
   /** Posición de 0 a 1. */
@@ -42,4 +44,27 @@ export function cssAngleToSvgVector(angleDeg: number): SvgGradientVector {
 export function toCssLinearGradient({ angleDeg, stops }: LinearGradientToken): string {
   const parts = stops.map(({ color, offset }) => `${color} ${round(offset * 100)}%`);
   return `linear-gradient(${angleDeg}deg, ${parts.join(', ')})`;
+}
+
+/**
+ * Color de un `<Stop>` de SVG con su alfa aparte (`stopColor` opaco + `stopOpacity`). En Android,
+ * react-native-svg ignora el alfa de un `rgba(...)` en `stopColor`: el reflejo se veía blanco sólido.
+ */
+export function svgStopColor(color: string): { stopColor: string; stopOpacity: number } {
+  const HEX_OR_RGB = /^(#[0-9a-f]{3,8}|rgba?\(.*\))$/i;
+  if (!HEX_OR_RGB.test(color.trim())) return { stopColor: color, stopOpacity: 1 };
+  const rgba = parseColor(color);
+  return { stopColor: toHex(rgba), stopOpacity: rgba.a };
+}
+
+/** Relleno de SVG con el alfa aparte (`fill` opaco + `fillOpacity`), por la misma razón. */
+export function svgFill(color: string): { fill: string; fillOpacity: number } {
+  const { stopColor, stopOpacity } = svgStopColor(color);
+  return { fill: stopColor, fillOpacity: stopOpacity };
+}
+
+/** Trazo de SVG con el alfa aparte (`stroke` opaco + `strokeOpacity`). */
+export function svgStroke(color: string): { stroke: string; strokeOpacity: number } {
+  const { stopColor, stopOpacity } = svgStopColor(color);
+  return { stroke: stopColor, strokeOpacity: stopOpacity };
 }

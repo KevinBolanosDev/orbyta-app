@@ -11,7 +11,7 @@ import Animated, {
 import Svg, { ClipPath, Defs, G, LinearGradient, Path, Stop } from 'react-native-svg';
 import { StyleSheet, useUnistyles } from 'react-native-unistyles';
 
-import { cssAngleToSvgVector } from '../lib/gradient';
+import { cssAngleToSvgVector, svgFill, svgStopColor, svgStroke } from '../lib/gradient';
 import { useReduceMotion } from '../motion/accessibility-preferences';
 import { springConfig, timingConfig } from '../motion/easing';
 import { triggerHaptic } from '../motion/haptics';
@@ -95,7 +95,7 @@ export function LevelBadge({
           <Defs>
             <LinearGradient id={`${id}-holo`} {...vector}>
               {holoGradient.stops.map((stop) => (
-                <Stop key={stop.offset} offset={stop.offset} stopColor={stop.color} />
+                <Stop key={stop.offset} offset={stop.offset} {...svgStopColor(stop.color)} />
               ))}
             </LinearGradient>
             <ClipPath id={`${id}-clip`}>
@@ -104,10 +104,10 @@ export function LevelBadge({
           </Defs>
           <Path d={hexagon} fill={`url(#${id}-holo)`} />
           <G clipPath={`url(#${id}-clip)`}>
-            <AnimatedPath fill={theme.glass.sheenPeak} animatedProps={stripeProps} />
+            <AnimatedPath {...svgFill(theme.glass.sheenPeak)} animatedProps={stripeProps} />
           </G>
           {/* Borde de vidrio: una línea clara de 1 px sobre el degradado. */}
-          <Path d={hexagon} fill="none" stroke={theme.glass.sheenPeak} strokeWidth={1} />
+          <Path d={hexagon} fill="none" {...svgStroke(theme.glass.sheenPeak)} strokeWidth={1} />
         </Svg>
         <View style={styles.center}>
           <Text allowFontScaling={false} style={styles.number(side)}>

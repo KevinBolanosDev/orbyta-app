@@ -1,5 +1,6 @@
 import { TZDate } from '@date-fns/tz';
-import { format } from 'date-fns';
+// Import por función: Metro no descarta código sin usar (ver packages/ui/src/lib/calendar.ts).
+import { format } from 'date-fns/format';
 
 /** Fecha de calendario sin hora, ej. `2026-10-17`. */
 export type IsoDate = string & { readonly __brand: 'IsoDate' };

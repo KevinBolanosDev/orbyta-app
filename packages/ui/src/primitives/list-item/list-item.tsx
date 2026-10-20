@@ -11,6 +11,7 @@ import Animated, {
 import { StyleSheet, useUnistyles } from 'react-native-unistyles';
 import { scheduleOnRN } from 'react-native-worklets';
 
+import { focusRing } from '../../lib/focus-ring';
 import { swipeOffset, swipeRelease, SWIPE_THRESHOLD } from '../../lib/swipe';
 import { useReduceMotion } from '../../motion/accessibility-preferences';
 import { springConfig, timingConfig } from '../../motion/easing';
@@ -212,7 +213,7 @@ export function ListItem({
               accessibilityRole="button"
               {...a11y}
               onPress={onPress}
-              style={({ pressed }) => styles.pressable(pressed)}
+              style={({ pressed }) => [styles.pressable(pressed), styles.focus]}
             >
               {content}
             </Pressable>
@@ -230,6 +231,7 @@ export function ListItem({
 }
 
 const styles = StyleSheet.create((theme) => ({
+  focus: focusRing(theme.colors.focus),
   outer: {
     overflow: 'hidden',
     borderRadius: theme.radius.m,

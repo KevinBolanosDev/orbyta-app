@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { Text as NativeText, View, type ViewProps } from 'react-native';
 import { StyleSheet } from 'react-native-unistyles';
 
@@ -58,7 +59,11 @@ export interface BrandLockupProps extends Pick<ViewProps, 'style' | 'testID'> {
   accessibilityLabel: string;
 }
 
-/** BR04 · Logotipo horizontal: símbolo + "GRAVYX" + "ASCENDA" (§11.4). El símbolo no se anima. */
+/**
+ * BR04 · Logotipo horizontal: símbolo + "GRAVYX" + "ASCENDA" (§11.4). El símbolo no se anima.
+ * Si no cabe en el ancho disponible (teléfonos angostos), se encoge entero y en proporción: un logo
+ * no se corta ni parte en dos líneas.
+ */
 export function BrandLockup({
   height = 48,
   variant = 'auto',
@@ -68,21 +73,51 @@ export function BrandLockup({
   testID,
 }: BrandLockupProps) {
   const gap = height * LOCKUP.gap;
+  // Ancho disponible y ancho natural del logotipo (el layout no cambia con la escala).
+  const [available, setAvailable] = useState(0);
+  const [natural, setNatural] = useState({ width: 0, height: 0 });
+  const scale = available > 0 && natural.width > available ? available / natural.width : 1;
   return (
     <View
       accessible
       accessibilityRole="image"
       accessibilityLabel={accessibilityLabel}
-      style={[styles.row(gap), style]}
+      style={[styles.fit(scale < 1 ? natural.height * scale : undefined), style]}
       testID={testID}
+      onLayout={(event) => {
+        setAvailable(event.nativeEvent.layout.width);
+      }}
     >
-      <BrandMark size={height} variant={variant === 'auto' && height >= 160 ? 'icons' : variant} />
-      <Wordmark size={height * LOCKUP.wordSize} gap={gap} {...(color ? { color } : {})} />
+      <View
+        style={[styles.row(gap), styles.natural(scale)]}
+        onLayout={(event) => {
+          const { width, height: rowHeight } = event.nativeEvent.layout;
+          setNatural({ width, height: rowHeight });
+        }}
+      >
+        <BrandMark
+          size={height}
+          variant={variant === 'auto' && height >= 160 ? 'icons' : variant}
+        />
+        <Wordmark size={height * LOCKUP.wordSize} gap={gap} {...(color ? { color } : {})} />
+      </View>
     </View>
   );
 }
 
 const styles = StyleSheet.create((theme) => ({
+  // Ocupa el ancho del padre para medirlo; con escala, el alto baja al del logo encogido.
+  fit: (scaledHeight: number | undefined) => ({
+    alignSelf: 'stretch',
+    ...(scaledHeight === undefined ? {} : { height: scaledHeight }),
+  }),
+  // Tamaño natural (no se encoge con flex) y escala desde la esquina superior izquierda.
+  natural: (scale: number) => ({
+    alignSelf: 'flex-start',
+    flexShrink: 0,
+    transformOrigin: 'left top',
+    transform: [{ scale }],
+  }),
   row: (gap: number) => ({
     flexDirection: 'row',
     alignItems: 'center',

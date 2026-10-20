@@ -3,7 +3,8 @@ import type { ModuleId } from '../tokens/modules.ts';
 import { round1 } from './svg-tree.ts';
 
 // Órbita hexagonal del logo (§11.3). Función pura que usan el SVG estático, la animación M20 (web y
-// nativo) y `pnpm brand:export`.
+// nativo) y `pnpm brand:export`. Las funciones llevan 'worklet': desde F1.9 la órbita del logo
+// animado se calcula en el hilo de UI (en Node y en JS la directiva no hace nada).
 
 export const ORBIT = {
   radius: 88,
@@ -42,6 +43,7 @@ const TILT = (Math.abs(ORBIT.tiltDeg) * Math.PI) / 180;
 
 /** Aplana el eje Y (× 0,34) y rota −18° alrededor del centro del lienzo. */
 export function projectPoint(X: number, Y: number): { x: number; y: number } {
+  'worklet';
   const y2 = Y * ORBIT.squash;
   return {
     x: ORBIT.center + X * Math.cos(TILT) + y2 * Math.sin(TILT),
@@ -51,6 +53,7 @@ export function projectPoint(X: number, Y: number): { x: number; y: number } {
 
 /** Los seis vértices proyectados para un ángulo de giro φ (radianes). */
 export function orbitVertices(phi: number): OrbitPoint[] {
+  'worklet';
   return [0, 1, 2, 3, 4, 5].map((k) => {
     const a = phi + (k * Math.PI) / 3;
     const point = projectPoint(ORBIT.radius * Math.cos(a), ORBIT.radius * Math.sin(a));
@@ -58,16 +61,17 @@ export function orbitVertices(phi: number): OrbitPoint[] {
   });
 }
 
-const lerp = (from: OrbitPoint, to: OrbitPoint, t: number) => ({
-  x: from.x + (to.x - from.x) * t,
-  y: from.y + (to.y - from.y) * t,
-});
+function lerp(from: OrbitPoint, to: OrbitPoint, t: number) {
+  'worklet';
+  return { x: from.x + (to.x - from.x) * t, y: from.y + (to.y - from.y) * t };
+}
 
-const at = (points: readonly OrbitPoint[], index: number): OrbitPoint => {
+function at(points: readonly OrbitPoint[], index: number): OrbitPoint {
+  'worklet';
   const point = points[((index % 6) + 6) % 6];
-  if (!point) throw new Error(`Missing orbit vertex ${index}`);
+  if (!point) throw new Error(`Missing orbit vertex ${index.toString()}`);
   return point;
-};
+}
 
 /**
  * Trazo y posición de los cinco íconos para un ángulo φ. El trazo empieza al 30 % del lado k4 → k5,
@@ -75,6 +79,7 @@ const at = (points: readonly OrbitPoint[], index: number): OrbitPoint => {
  * Tamaño `31 + 7·d`; opacidad 1 delante y `0,5 + 0,5·(d + 1)` detrás.
  */
 export function orbitFrame(phi: number): OrbitFrame {
+  'worklet';
   const vertices = orbitVertices(phi);
   const gap = ORBIT.gapVertex;
   const start = lerp(at(vertices, gap), at(vertices, gap + 1), 0.3);
@@ -103,6 +108,7 @@ export function orbitFrame(phi: number): OrbitFrame {
 
 /** M20: ángulo de la órbita tras `elapsedMs`, una vuelta cada `turnMs` a velocidad constante. */
 export function orbitPhase(elapsedMs: number, turnMs: number): number {
+  'worklet';
   const turns = (elapsedMs % turnMs) / turnMs;
   return ORBIT.restPhi + turns * 2 * Math.PI;
 }

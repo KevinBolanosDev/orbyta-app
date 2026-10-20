@@ -3,6 +3,7 @@ import { Pressable, View, type ViewProps } from 'react-native';
 import Animated from 'react-native-reanimated';
 import { StyleSheet } from 'react-native-unistyles';
 
+import { focusRing } from '../../lib/focus-ring';
 import { useEnter } from '../../motion/use-enter';
 import { usePress } from '../../motion/use-press';
 import { GlassSurface } from '../glass-surface/glass-surface';
@@ -81,6 +82,7 @@ function PressableCard({
       onPress={onPress}
       onPressIn={onPressIn}
       onPressOut={onPressOut}
+      style={styles.focus}
     >
       <Animated.View style={animatedStyle}>{children}</Animated.View>
     </Pressable>
@@ -102,6 +104,7 @@ function EnterView({
 }
 
 const styles = StyleSheet.create((theme) => ({
+  focus: focusRing(theme.colors.focus),
   surface: (hero: boolean) => ({
     gap: theme.space[4],
     padding: hero

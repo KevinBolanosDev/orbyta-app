@@ -17,7 +17,9 @@ export interface GlassRenderingInput {
  * - `solid`: "reducir transparencia" → relleno sólido de respaldo, sin desenfoque.
  * - `css-blur`: web → `backdrop-filter` (sin soporte, el navegador deja el relleno translúcido).
  * - `native-blur`: `BlurView`. En Android solo en chrome y sheet (es costoso) y con `blurTarget`.
- * - `translucent`: solo el relleno translúcido (`glass.card.fallback` en Android).
+ * - `translucent`: solo el relleno translúcido (`glass.card.fallback`: tarjetas en Android).
+ * Chrome y sheet sin desenfoque en Android (toasts, hojas y diálogos, que no tienen `blurTarget`)
+ * usan el sólido de respaldo (§3.4): con el relleno al 10 % se leía el contenido de atrás.
  */
 export function glassRendering({
   os,
@@ -27,7 +29,10 @@ export function glassRendering({
 }: GlassRenderingInput): GlassRendering {
   if (reduceTransparency) return 'solid';
   if (os === 'web') return 'css-blur';
-  if (os === 'android') return level !== 'card' && hasBlurTarget ? 'native-blur' : 'translucent';
+  if (os === 'android') {
+    if (level === 'card') return 'translucent';
+    return hasBlurTarget ? 'native-blur' : 'solid';
+  }
   return 'native-blur';
 }
 
@@ -38,7 +43,7 @@ export function cssBackdropFilter({ blur, saturation }: Pick<GlassStyle, 'blur' 
 
 /**
  * Intensidad de `BlurView` (0–100) para un radio de desenfoque. expo-blur no usa píxeles: con el
- * doble del radio, 30 → 60 y 40 → 80 se parecen al desenfoque de la web. TODO(F1.9): ajustar en
+ * doble del radio, 30 → 60 y 40 → 80 se parecen al desenfoque de la web. TODO(F2): ajustar en
  * equipo al medir FPS.
  */
 export function nativeBlurIntensity(blur: number): number {

@@ -31,6 +31,7 @@ import {
   type MonthCursor,
 } from '../../lib/calendar';
 import { withAlpha } from '../../lib/color';
+import { focusRing } from '../../lib/focus-ring';
 import type { NumberLocale } from '../../lib/format-number';
 import { triggerHaptic } from '../../motion/haptics';
 import { BottomSheet } from '../bottom-sheet/bottom-sheet';
@@ -329,7 +330,7 @@ function MonthView({
                 onPress={() => {
                   onPick(day.iso);
                 }}
-                style={styles.dayCell(middle ? rangeFill : undefined)}
+                style={[styles.dayCell(middle ? rangeFill : undefined), styles.focus]}
               >
                 <View style={styles.day(edge, day.iso === today)}>
                   <Text
@@ -397,6 +398,7 @@ function TimeStepper({
 const DAY = 40;
 
 const styles = StyleSheet.create((theme) => ({
+  focus: focusRing(theme.colors.focus),
   shortcuts: {
     flexDirection: 'row',
     flexWrap: 'wrap',

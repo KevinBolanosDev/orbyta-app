@@ -2,7 +2,7 @@ import { useId } from 'react';
 import { StyleSheet as NativeStyleSheet, View, type ViewProps } from 'react-native';
 import Svg, { Defs, LinearGradient, Rect, Stop } from 'react-native-svg';
 
-import { cssAngleToSvgVector, type LinearGradientToken } from '../../lib/gradient';
+import { cssAngleToSvgVector, svgStopColor, type LinearGradientToken } from '../../lib/gradient';
 
 export interface GradientFillProps extends Pick<ViewProps, 'style' | 'testID'> {
   gradient: LinearGradientToken;
@@ -29,7 +29,7 @@ export function GradientFill({ gradient, style, testID }: GradientFillProps) {
         <Defs>
           <LinearGradient id={id} {...vector}>
             {gradient.stops.map((stop) => (
-              <Stop key={stop.offset} offset={stop.offset} stopColor={stop.color} />
+              <Stop key={stop.offset} offset={stop.offset} {...svgStopColor(stop.color)} />
             ))}
           </LinearGradient>
         </Defs>

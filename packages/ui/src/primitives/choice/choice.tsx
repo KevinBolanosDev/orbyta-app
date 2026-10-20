@@ -5,6 +5,7 @@ import { Pressable, View, type ViewProps } from 'react-native';
 import Animated, { useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated';
 import { StyleSheet, useUnistyles } from 'react-native-unistyles';
 
+import { focusRing } from '../../lib/focus-ring';
 import { useReduceMotion } from '../../motion/accessibility-preferences';
 import { timingConfig } from '../../motion/easing';
 import { triggerHaptic } from '../../motion/haptics';
@@ -62,7 +63,7 @@ export function Checkbox({
         triggerHaptic('selection');
         onChange(checked !== true);
       }}
-      style={[styles.row(disabled), style]}
+      style={[styles.row(disabled), styles.focus, style]}
       testID={testID}
     >
       <View style={styles.box(active)}>
@@ -107,7 +108,7 @@ export function Radio({
         triggerHaptic('selection');
         onSelect();
       }}
-      style={[styles.row(disabled), style]}
+      style={[styles.row(disabled), styles.focus, style]}
       testID={testID}
     >
       <View style={styles.circle(selected)}>
@@ -174,6 +175,7 @@ function ChoiceTexts({ label, description }: { label: string; description: strin
 }
 
 const styles = StyleSheet.create((theme) => ({
+  focus: focusRing(theme.colors.focus),
   row: (disabled: boolean) => ({
     minHeight: theme.layout.minTouchTarget,
     flexDirection: 'row',

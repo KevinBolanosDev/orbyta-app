@@ -4,6 +4,7 @@ import { useEffect, useRef, useState, type ComponentRef, type Ref } from 'react'
 import { Pressable, TextInput, View, type ViewProps } from 'react-native';
 import { StyleSheet, useUnistyles } from 'react-native-unistyles';
 
+import { focusRing } from '../../lib/focus-ring';
 import { fontFamily, MAX_FONT_SCALE, typeScale } from '../../tokens';
 import { Button } from '../button/button';
 import { Icon } from '../icon/icon';
@@ -97,6 +98,7 @@ export function SearchBar({
             accessibilityRole="button"
             accessibilityLabel={clearLabel}
             hitSlop={theme.space[3]}
+            style={styles.focus}
             onPress={() => {
               onChangeText('');
             }}
@@ -123,6 +125,7 @@ export function SearchBar({
 const { bodyL } = typeScale;
 
 const styles = StyleSheet.create((theme) => ({
+  focus: focusRing(theme.colors.focus),
   row: {
     flexDirection: 'row',
     alignItems: 'center',

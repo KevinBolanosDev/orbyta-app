@@ -10,6 +10,7 @@ import Animated, {
 import { StyleSheet, useUnistyles } from 'react-native-unistyles';
 
 import { withAlpha } from '../lib/color';
+import { focusRing } from '../lib/focus-ring';
 import { useReduceMotion } from '../motion/accessibility-preferences';
 import { springConfig, timingConfig } from '../motion/easing';
 import { triggerHaptic } from '../motion/haptics';
@@ -152,7 +153,7 @@ export function AchievementBadge({
         onPress={onPress}
         onPressIn={press.onPressIn}
         onPressOut={press.onPressOut}
-        style={style}
+        style={[styles.focus, style]}
         testID={testID}
       >
         <Animated.View style={[styles.root, press.animatedStyle]}>{body}</Animated.View>
@@ -172,6 +173,7 @@ export function AchievementBadge({
 }
 
 const styles = StyleSheet.create((theme) => ({
+  focus: focusRing(theme.colors.focus),
   root: {
     width: 112,
     alignItems: 'center',

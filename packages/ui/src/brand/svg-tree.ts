@@ -56,6 +56,7 @@ export function mergeParts(...parts: readonly SvgParts[]): SvgParts {
 
 /** Redondeo para coordenadas y trazos (0,1 de unidad en un lienzo de 200). */
 export function round1(value: number): number {
+  'worklet';
   return Math.round(value * 10) / 10 + 0;
 }
 

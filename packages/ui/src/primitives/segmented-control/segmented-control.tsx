@@ -3,6 +3,7 @@ import { Pressable, View, type ViewProps } from 'react-native';
 import Animated from 'react-native-reanimated';
 import { StyleSheet, useUnistyles } from 'react-native-unistyles';
 
+import { focusRing } from '../../lib/focus-ring';
 import { triggerHaptic } from '../../motion/haptics';
 import { useSlideIndicator, type SlotLayout } from '../../motion/use-slide-indicator';
 import { Icon, IconColorProvider, type IconComponent } from '../icon/icon';
@@ -72,7 +73,9 @@ export function SegmentedControl<T extends string>({
               const { x, width } = event.nativeEvent.layout;
               setLayouts((current) => ({ ...current, [option.value]: { x, width } }));
             }}
-            style={styles.segment(fullWidth)}
+            // El relleno del contenedor también toca la opción: el objetivo llega a 44 px de alto.
+            hitSlop={{ top: PADDING, bottom: PADDING }}
+            style={[styles.segment(fullWidth), styles.focus]}
           >
             <IconColorProvider color={color}>
               {option.icon ? <Icon icon={option.icon} size="inline" /> : null}
@@ -90,6 +93,7 @@ export function SegmentedControl<T extends string>({
 const PADDING = 4;
 
 const styles = StyleSheet.create((theme) => ({
+  focus: focusRing(theme.colors.focus),
   track: (fullWidth: boolean) => ({
     flexDirection: 'row',
     alignSelf: fullWidth ? 'stretch' : 'flex-start',

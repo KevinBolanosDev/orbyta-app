@@ -3,6 +3,7 @@ import { Pressable, View, type ViewProps } from 'react-native';
 import Animated from 'react-native-reanimated';
 import { StyleSheet, useUnistyles } from 'react-native-unistyles';
 
+import { focusRing } from '../../lib/focus-ring';
 import { usePress } from '../../motion/use-press';
 import { Icon, IconColorProvider, type IconComponent } from '../icon/icon';
 import { Text } from '../text/text';
@@ -62,7 +63,7 @@ export function Chip({
             accessibilityLabel={removeLabel ?? label}
             onPress={onRemove}
             hitSlop={slop}
-            style={styles.remove}
+            style={[styles.remove, styles.focus]}
           >
             <Icon icon={X} size="inline" />
           </Pressable>
@@ -87,7 +88,7 @@ export function Chip({
       onPressIn={onPressIn}
       onPressOut={onPressOut}
       hitSlop={slop}
-      style={style}
+      style={[styles.focus, style]}
       testID={testID}
     >
       {body}
@@ -96,6 +97,7 @@ export function Chip({
 }
 
 const styles = StyleSheet.create((theme) => ({
+  focus: focusRing(theme.colors.focus),
   body: (active: boolean, categoryColor: string | undefined) => ({
     height: HEIGHT,
     flexDirection: 'row',

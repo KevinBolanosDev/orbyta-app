@@ -17,6 +17,7 @@ import Animated, {
 import { StyleSheet, useUnistyles } from 'react-native-unistyles';
 
 import { withAlpha } from '../../lib/color';
+import { focusRing } from '../../lib/focus-ring';
 import { useReduceMotion } from '../../motion/accessibility-preferences';
 import { fadeConfig } from '../../motion/easing';
 import { settledOpacity } from '../../motion/motion-math';
@@ -102,7 +103,7 @@ export function SyncBadge({ status, label, onPress, style, testID }: SyncBadgePr
       accessibilityLiveRegion="polite"
       onPress={onPress}
       hitSlop={theme.space[2]}
-      style={style}
+      style={[styles.focus, style]}
       testID={testID}
     >
       {body}
@@ -200,6 +201,7 @@ export function OfflineBanner({
 }
 
 const styles = StyleSheet.create((theme) => ({
+  focus: focusRing(theme.colors.focus),
   badge: (border: string, fill: string) => ({
     alignSelf: 'flex-start',
     flexDirection: 'row',

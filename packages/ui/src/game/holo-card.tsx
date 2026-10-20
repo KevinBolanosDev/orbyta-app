@@ -12,6 +12,7 @@ import Animated, {
 } from 'react-native-reanimated';
 import { StyleSheet } from 'react-native-unistyles';
 
+import { focusRing } from '../lib/focus-ring';
 import { useReduceMotion } from '../motion/accessibility-preferences';
 import { springConfig, timingConfig } from '../motion/easing';
 import type { SheenMode } from '../motion/use-sheen';
@@ -121,6 +122,7 @@ export function HoloCard({
           accessibilityRole="button"
           {...(accessibilityLabel ? { accessibilityLabel } : {})}
           onPress={onPress}
+          style={styles.focus}
         >
           {card}
         </Pressable>
@@ -175,6 +177,7 @@ function GyroTilt({
 }
 
 const styles = StyleSheet.create((theme) => ({
+  focus: focusRing(theme.colors.focus),
   card: {
     overflow: 'hidden',
     borderRadius: theme.radius.xl,

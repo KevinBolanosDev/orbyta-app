@@ -14,7 +14,33 @@ export interface Elevation {
   glow: string;
 }
 
-export function elevation(scheme: ColorScheme, colors: Pick<SemanticColors, 'glow'>): Elevation {
+/**
+ * Sombras por tema. `compact` (Android): radios más cortos y glow centrado. En Android cada
+ * `boxShadow` con desenfoque se dibuja aparte, y las de 70–90 px en cada tarjeta cuestan cuadros sin
+ * verse sobre el fondo oscuro; el glow corrido 10 px hacia abajo se veía como una mancha bajo los
+ * controles chicos (selector, pestañas, paso actual). Medido en F1.9.
+ */
+export function elevation(
+  scheme: ColorScheme,
+  colors: Pick<SemanticColors, 'glow'>,
+  compact = false,
+): Elevation {
+  if (compact) {
+    const glow = `0 2px 12px ${colors.glow}`;
+    return scheme === 'dark'
+      ? {
+          e1: '0 4px 10px rgba(0,0,0,0.35)',
+          e2: '0 8px 18px rgba(0,0,0,0.45)',
+          e3: '0 12px 24px rgba(0,0,0,0.55)',
+          glow,
+        }
+      : {
+          e1: '0 3px 8px rgba(30,50,110,0.10)',
+          e2: '0 6px 16px rgba(30,50,110,0.14)',
+          e3: '0 10px 22px rgba(30,50,110,0.20)',
+          glow,
+        };
+  }
   const glow = `0 10px 30px ${colors.glow}`;
   return scheme === 'dark'
     ? {
@@ -57,24 +83,26 @@ export interface GlassTheme extends Record<GlassLevel, GlassStyle> {
 
 export const glass: Readonly<Record<ColorScheme, GlassTheme>> = {
   dark: {
+    // Vidrio ahumado: tinta oscura (el respaldo sólido al 50–60 %) para que el texto pase AA aunque
+    // la aurora quede detrás (F1.9). Con blanco al 6 %, `inkMuted` daba 2,5:1 sobre la aurora.
     chrome: {
       blur: 30,
       saturation: 1.8,
-      fill: 'rgba(255,255,255,0.08)',
+      fill: 'rgba(14,20,38,0.55)',
       border: 'rgba(255,255,255,0.13)',
       highlight: 'rgba(255,255,255,0.22)',
     },
     card: {
       blur: 30,
       saturation: 1.8,
-      fill: 'rgba(255,255,255,0.06)',
+      fill: 'rgba(14,20,38,0.5)',
       border: 'rgba(255,255,255,0.13)',
       highlight: 'rgba(255,255,255,0.22)',
     },
     sheet: {
       blur: 40,
       saturation: 1.8,
-      fill: 'rgba(255,255,255,0.10)',
+      fill: 'rgba(14,20,38,0.6)',
       border: 'rgba(255,255,255,0.16)',
       highlight: 'rgba(255,255,255,0.22)',
     },

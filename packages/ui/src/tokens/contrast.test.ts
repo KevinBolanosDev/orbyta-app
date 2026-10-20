@@ -1,4 +1,4 @@
-import { composite, contrastRatio, parseColor, toHex, WCAG_AA } from '../lib/color';
+import { composite, contrastRatio, parseColor, toHex, WCAG_AA, withAlpha } from '../lib/color';
 
 import { categoryColors, holoGradient, semanticColors, type ColorScheme } from './color';
 import { glass } from './surface';
@@ -47,6 +47,36 @@ describe('holographic gradient', () => {
   it('keeps its ink readable on every stop', () => {
     for (const stop of holoGradient.stops) {
       expect(contrastRatio(holoGradient.ink, stop.color)).toBeGreaterThanOrEqual(WCAG_AA.text);
+    }
+  });
+});
+
+describe('text on glass over the aurora (F1.9 audit)', () => {
+  // Fondo de referencia detrás de una tarjeta: un orbe y una cortina a media intensidad (la zona
+  // típica, a mitad del degradado de cada uno), tal como se midió en el emulador.
+  const aurora = (scheme: ColorScheme) => {
+    const c = semanticColors[scheme];
+    const orbs = ['orb1', 'orb2', 'orb3'] as const;
+    const ribbons = [
+      ['primary', scheme === 'dark' ? 0.4 : 0.2],
+      ['gain', scheme === 'dark' ? 0.3 : 0.16],
+      ['accent', scheme === 'dark' ? 0.34 : 0.18],
+    ] as const;
+    return orbs.flatMap((orb) =>
+      ribbons.map(([ribbon, alpha]) => {
+        const orbColor = parseColor(c[orb]);
+        let under = composite({ ...orbColor, a: orbColor.a * 0.6 }, parseColor(c.bg));
+        under = composite(parseColor(withAlpha(c[ribbon], alpha * 0.45)), under);
+        return toHex(composite(parseColor(glass[scheme].card.fill), under));
+      }),
+    );
+  };
+
+  it.each(SCHEMES)('keeps ink and inkMuted at AA on a %s glass card', (scheme) => {
+    const colors = semanticColors[scheme];
+    for (const surface of aurora(scheme)) {
+      expect(contrastRatio(colors.ink, surface)).toBeGreaterThanOrEqual(7);
+      expect(contrastRatio(colors.inkMuted, surface)).toBeGreaterThanOrEqual(WCAG_AA.text);
     }
   });
 });
